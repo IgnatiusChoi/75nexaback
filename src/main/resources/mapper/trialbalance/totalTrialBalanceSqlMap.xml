@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="kr.co.seoulit.account.settlement.trialbalance.mapper.TotalTrialBalanceMapper">
+
+	
+<resultMap id="totalTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.TotalTrialBalanceBean">
+
+		<result property="lev" column="LEV"  />
+		<result property="accountName" column="ACCOUNT_NAME" />
+		<result property="accountInnerCode" column="CODE"/>
+		<result property="debitsSumBalance" column="DEBITS_SUM_BALANCE" />
+		<result property="debitsSum" column="DEBITS_SUM" />
+		<result property="creditsSum" column="CREDITS_SUM" />
+		<result property="creditsSumBalance" column="CREDITS_SUM_BALANCE" />
+	</resultMap>
+
+	<resultMap id="accountingSettlementStatusResult" type="kr.co.seoulit.account.posting.business.to.AccountingSettlementStatusBean">
+		<result property="accountPeriodNo" column="ACCOUNT_PERIOD_NO"/>
+		<result property="totalTrialBalance" column="TOTAL_TRIAL_BALANCE"/>
+		<result property="incomeStatement" column="INCOME_STATEMENT"/>
+		<result property="financialPosition" column="FINANCIAL_POSITION"/>
+	</resultMap>
+		
+	<parameterMap id="totalTrialBalanceParams" type="java.util.HashMap">
+		<parameter property="accountPeriodNo" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="callResult" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="errorCode" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+		<parameter property="totalTrialBalance" jdbcType="CURSOR" javaType="java.sql.ResultSet"  mode="OUT"
+				   resultMap="totalTrialBalanceResult"/>
+		<parameter property="accountingSettlementStatus" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
+				   resultMap="accountingSettlementStatusResult"/>
+	</parameterMap>
+		
+	<select id="selectcallTotalTrialBalance" parameterMap="totalTrialBalanceParams" statementType="CALLABLE">
+			<![CDATA[
+         {call P_TOTAL_TRIAL_BALANCE(?, ?, ?, ?, ?, ?)}
+       ]]>
+	</select>
+		
+		
+	 <parameterMap id="earlyStatementsParams" type="java.util.HashMap">
+		<parameter property="accountPeriodNo" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+		<parameter property="callResult" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+		<parameter property="errorCode" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="String" mode="OUT"/>
+		<parameter property="accountingSettlementStatus" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
+				   resultMap="accountingSettlementStatusResult"/>
+	</parameterMap>
+
+	<select id="selectcallEarlyStatements" parameterMap="earlyStatementsParams" resultMap="accountingSettlementStatusResult" statementType="CALLABLE">
+		<![CDATA[
+         {call P_EARLY_STATEMENTS(?, ?, ?, ?, ?)}
+       ]]>
+	</select>
+
+	<select id="selectAccountingSettlement" parameterMap="earlyStatementsParams" statementType="CALLABLE" >
+		<![CDATA[
+         {call P_ACCOUNTING_SETTLEMENT_STATUS(?, ?, ?, ?, ?)}
+       ]]>
+	</select>
+
+	<parameterMap id="detailTrialBalanceParams" type="java.util.HashMap">
+		<parameter property="fromDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+		<parameter property="toDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+		<parameter property="errorCode" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="String" mode="OUT"/>
+		<parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
+				   resultMap="detailTrialBalanceResult"/>
+	</parameterMap>
+
+
+	<resultMap id="detailTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.DetailTrialBalanceBean">
+		<result property="lev" column="LEV"/>
+		<result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>
+		<result property="debitsSum" column="DEBITS_SUM"/>
+		<result property="exceptCashDebits" column="EXCEPT_CASH_DEBITS"/>
+		<result property="cashDebits" column="CASH_DEBITS"/>
+		<result property="accountName" column="ACCOUNT_NAME"/>
+		<result property="creditsSumBalance" column="CREDITS_SUM_BALANCE"/>
+		<result property="debitsSumBalance" column="DEBITS_SUM_BALANCE"/>
+		<result property="cashCredits" column="CASH_CREDITS"/>
+		<result property="exceptCashCredits" column="EXCEPT_CASH_CREDITS"/>
+		<result property="creditsSum" column="CREDITS_SUM"/>
+	</resultMap>
+
+
+
+
+	<select id="selectDetailTrialBalance" parameterMap="detailTrialBalanceParams" statementType="CALLABLE">
+
+		<![CDATA[
+		{call P_DETAIL_TRIAL_BALANCE(?, ?, ?, ?, ?)}
+		]]>
+
+
+</select>
+
+</mapper>
+		 

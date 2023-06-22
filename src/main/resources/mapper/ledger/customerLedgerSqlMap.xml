@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.seoulit.account.posting.ledger.mapper.CustomerLedgerMapper">
+
+
+	<resultMap id="customerLedgerBeanResult" type="kr.co.seoulit.account.posting.ledger.to.CustomerLedgerBean">
+		<result property="carryOver" column="CARRY_OVER" />
+		<result property="customerCode" column="CUSTOMER_CODE" />
+		<result property="customerName" column="CUSTOMER_NAME" />
+		<result property="deposit" column="DEPOSIT" />
+		<result property="withdrawal" column="WITHDRAWAL" />
+		<result property="balance" column="BALANCE" />
+	</resultMap>
+
+
+	<select id="selectCustomerLedgerList" parameterType="String" resultMap="customerLedgerBeanResult">
+		<![CDATA[
+		SELECT a.carryover AS CARRY_OVER,
+			   b.customerCode AS CUSTOMER_CODE,
+			   b.customerName AS CUSTOMER_NAME,
+			   b.deposit AS DEPOSIT,
+			   b.withdrawal AS WITHDRAWAL,
+			   a.carryover+b.deposit-b.withdrawal AS BALANCE FROM
+																 (
+
+																	 SELECT NVL(MAX(b.carryover),0) AS carryover FROM
+																													 (SELECT j.CUSTOMER_CODE AS customerCode,
+																															 j.CUSTOMER_NAME AS customerName,
+																															 SUM(NVL(j.LEFT_DEBTOR_PRICE,0)) AS deposit,
+																															 SUM(NVL(j.RIGHT_CREDITS_PRICE,0)) AS withdrawal
+
+																													  FROM journal j
+																														 ,slip s
+
+
+																													  WHERE j.SLIP_NO=s.SLIP_NO
+																														AND s.REPORTING_DATE BETWEEN to_date(#{fromDate},'yyyy-mm-dd') AND to_date(#{toDate},'yyyy-mm-dd')
+																														AND j.CUSTOMER_NAME IS NOT NULL
+																													  GROUP BY j.CUSTOMER_CODE, j.CUSTOMER_NAME) a,
+
+
+																													 (SELECT NVL(SUM(NVL(j.LEFT_DEBTOR_PRICE,0)) -  SUM(NVL(j.RIGHT_CREDITS_PRICE,0)),0) AS carryover
+																														   ,j.CUSTOMER_CODE AS customercode
+
+																													  FROM journal j
+																														 ,slip s
+																													  WHERE j.SLIP_NO=s.SLIP_NO
+																														AND to_date(s.REPORTING_DATE,'yyyy-mm-dd') < to_date(#{fromDate},'yyyy-mm-dd')
+																														AND j.CUSTOMER_NAME IS NOT NULL
+																													  GROUP BY j.CUSTOMER_CODE) b
+
+																	 WHERE a.customerCode=b.customercode
+
+																 ) a ,
+																 (
+																	 SELECT j.CUSTOMER_CODE AS customerCode,
+																			j.CUSTOMER_NAME AS customerName,
+																			SUM(NVL(j.LEFT_DEBTOR_PRICE,0)) AS deposit,
+																			SUM(NVL(j.RIGHT_CREDITS_PRICE,0)) AS withdrawal
+
+																	 FROM journal j
+																		,slip s
+
+
+																	 WHERE j.SLIP_NO=s.SLIP_NO
+																	   AND to_date(s.REPORTING_DATE,'yyyy-mm-dd') BETWEEN to_date(#{fromDate},'yyyy-mm-dd') AND to_date(#{toDate},'yyyy-mm-dd')
+																	   AND j.CUSTOMER_NAME IS NOT NULL
+																	 GROUP BY j.CUSTOMER_CODE, j.CUSTOMER_NAME) b
+		]]>
+      </select>
+
+
+	<select id="selectCustomerLedgerDetailList" parameterType="String" resultType="kr.co.seoulit.account.posting.ledger.to.CustomerLedgerDetailBean">
+		<![CDATA[
+		SELECT s.REPORTING_DATE as reportingDate
+			 ,a.account_name as accountName
+			 ,NVL(j.left_debtor_price,0) as leftDebtorPrice
+			 ,NVL(j.RIGHT_CREDITS_PRICE,0) as rightCreditsPrice FROM
+			slip s
+			,journal j
+			,account a
+		    WHERE s.SLIP_NO=j.SLIP_NO
+		    AND j.ACCOUNT_INNER_CODE=a.ACCOUNT_INNER_CODE
+		    AND j.customer_code=#{customerCode}
+		    AND j.customer_name IS NOT NULL
+		]]>
+      </select>
+</mapper>

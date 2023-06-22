@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+	<mapper namespace="kr.co.seoulit.account.operate.system.mapper.BoardMapper">
+    
+    <insert id="insertBoard" parameterType="kr.co.seoulit.account.operate.system.to.BoardBean">
+    <![CDATA[
+    INSERT INTO BBS
+    (
+    	BBS_ID,
+    	BBS_TITLE,
+    	BBS_CONTENTS,
+    	BBS_DATE,
+    	EMP_NAME
+    )
+    VALUES
+    (
+    	BOARD_SQ.NEXTVAL,
+    	#{bbsTitle},
+    	#{bbsContents},
+    	TO_DATE(#{bbsDate},'YYYY-MM-DD HH24:MI:SS'),
+    	#{empName}
+    )
+     ]]>
+    </insert>
+    
+    <insert id="updateBoard" parameterType="kr.co.seoulit.account.operate.system.to.BoardBean">
+    <![CDATA[
+    UPDATE BBS
+    SET 
+    BBS_TITLE = #{bbsTitle},
+    BBS_CONTENTS = #{bbsContents},
+    BBS_DATE = #{bbsDate},
+    EMP_NAME = #{empName}
+    WHERE 
+    BBS_ID = #{bbsID}
+     ]]>
+    </insert>
+    	<select id="selectBoardList"
+		resultType="kr.co.seoulit.account.operate.system.to.BoardBean">
+		<![CDATA[
+				SELECT *
+				
+				FROM
+				(SELECT    	
+								BBS_ID AS bbsID,
+						    	BBS_TITLE AS bbsTitle,
+						    	BBS_CONTENTS AS bbsContents,
+								TO_CHAR(BBS_DATE,'YYYY-MM-DD HH24:MI:SS') AS bbsDate,
+						    	EMP_NAME AS empName,
+						    	ROWNUM AS rown
+				FROM BBS)
+		 ]]>
+	</select>
+	
+	
+    	<select id="selectBoarddetail"
+    	parameterType="String"
+		resultType="kr.co.seoulit.account.operate.system.to.BoardBean">
+		<![CDATA[
+				SELECT    	
+								BBS_ID AS bbsID,
+						    	BBS_TITLE AS bbsTitle,
+						    	BBS_CONTENTS AS bbsContents,
+								TO_CHAR(BBS_DATE,'YYYY-MM-DD HH24:MI:SS') AS bbsDate,
+						    	EMP_NAME AS empName
+				FROM BBS
+				WHERE BBS_ID = #{row}
+		
+		 ]]>
+	</select>
+
+	<delete id="deleteBoard">
+		DELETE FROM BBS
+		WHERE  CHECKED = '0';
+	</delete>
+	
+</mapper>

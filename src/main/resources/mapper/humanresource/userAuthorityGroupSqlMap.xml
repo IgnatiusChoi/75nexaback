@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.seoulit.account.operate.humanresource.mapper.UserAuthorityGroupMapper">
+	
+
+	<!-- selectDeptList -->
+	<select id="selectDeptList" resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
+		<![CDATA[
+			SELECT
+			 DISTINCT workplace_code as workplaceCode,
+			 workplace_name as workplaceName
+			FROM department
+		]]>
+	</select>
+
+
+	<!-- selectDetailDeptList -->
+	<select id="selectworkplaceCode"  resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
+		<![CDATA[
+				SELECT 
+				DISTINCT  
+						WORKPLACE_CODE AS workplaceCode,
+						WORKPLACE_NAME AS workplaceName
+						FROM DEPARTMENT
+						ORDER BY WORKPLACE_CODE 
+		]]>
+	</select>
+	
+	<select id="selectdeptCode" parameterType="String" resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
+		<![CDATA[
+					SELECT 
+						DEPT_CODE AS deptCode,
+						DEPT_NAME AS deptName
+						FROM DEPARTMENT
+						WHERE WORKPLACE_CODE = #{code}
+		]]>
+	</select>
+
+	<select id="selectDeptList2" resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
+		<![CDATA[
+			select dept_code, dept_name
+			from department
+		]]>
+	</select>
+
+
+</mapper>
