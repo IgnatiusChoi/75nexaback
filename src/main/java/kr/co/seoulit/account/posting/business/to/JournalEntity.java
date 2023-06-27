@@ -35,13 +35,9 @@ public class JournalEntity extends BaseBean {
 	    @Column(name = "ACCOUNT_INNER_CODE")
 	    private String accountInnerCode;
 
-	    @Transient
-	    private String accountName;
-	    
-	    
+		@Transient
+		private String accountName;
 	    private String customerCode;
-
-//		private String customerName;
 
 	    @Column(columnDefinition = "number")
 	    private String leftDebtorPrice;
@@ -52,17 +48,5 @@ public class JournalEntity extends BaseBean {
 	    @OneToMany
 	    @JoinColumn(name = "journalDetailNo")
 	    private List<JournalDetailEntity> journalDetailList;
-//	    private String id;
 
-	    //*^^*
-	    /*@Transient
-	    private String customerName;*/
-/*
-	    public String getAccountCode() {
-	        accountCode = accountInnerCode;
-	        return accountCode;
-	    }
-	    */
-//	    private String deptCode;
-//	    private String accountPeriodNo;
 	}
