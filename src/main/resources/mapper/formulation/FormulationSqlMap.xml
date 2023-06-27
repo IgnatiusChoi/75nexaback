@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-		
+
 <mapper namespace="kr.co.seoulit.account.budget.formulation.mapper.FormulationMapper">
 
 
 	<select id="selectBudget" parameterType="kr.co.seoulit.account.budget.formulation.to.BudgetBean" resultMap="budgetBeanResult">
 		<![CDATA[
- 			SELECT * 
+ 			SELECT *
  			FROM BUDGET
 			where DEPT_CODE= #{deptCode}
 			and WORKPLACE_CODE= #{workplaceCode}
@@ -15,30 +15,30 @@
 			and BUDGETING_CODE= #{budgetingCode}
  		]]>
     </select>
-    
- 
+
+
 	<select id="selectBudgetList" parameterType="Map" resultMap="budgetBeanResult">
 		<![CDATA[
-			SELECT * 
+			SELECT *
  			FROM BUDGET
 			WHERE BUDGET_CODE=#{budgetCode}
 			AND BUDGETING_CODE=#{budgetingCode}
  		]]>
     </select>
-    
- 
+
+
 	<select id="selectBudgetCode"  resultType="kr.co.seoulit.account.budget.formulation.to.BudgetCodeBean">
 		<![CDATA[
-			SELECT * 
+			SELECT *
  			FROM BUDGET_CODE
  		]]>
     </select>
-    
+
     <insert id="batchBudgetCode" parameterType="kr.co.seoulit.account.budget.formulation.to.BudgetBean">
     		<![CDATA[
     	INSERT INTO BUDGET
     	(
-    	BUDGET_CODE,
+		ACCOUNT_INNER_CODE,
     	DEPT_CODE,
     	BUDGETING_CODE,
     	WORKPLACE_CODE,
@@ -58,7 +58,7 @@
     	)
     VALUES
     (
-    #{budgetCode},
+    #{accountInnerCode},
     #{deptCode},
     #{budgetingCode},
     #{workplaceCode},
@@ -75,23 +75,23 @@
     #{m10Budget},
     #{m11Budget},
     #{m12Budget}
-    
+
     )
-    
+
  		]]>
     </insert>
-    
+
     <insert id="formationBudget" parameterType="map">
     		<![CDATA[
     	UPDATE BUDGET
     	SET
     	BUDGETING_CODE=#{budgetingCode}
     	WHERE BUDGET_CODE=#{budgetCode}
-    
+
  		]]>
     </insert>
-    
-    	
+
+
 
 	<!-- 외부parameter로 값을 던져주는거 -->
 	<parameterMap id="budgetParams" type="kr.co.seoulit.account.budget.formulation.to.BudgetBean" >
@@ -126,7 +126,7 @@
 		<parameter property="accountPeriodNo" jdbcType="VARCHAR" javaType="String" mode="IN" />
 		<parameter property="workplaceCode" jdbcType="VARCHAR" javaType="String" mode="IN" />
 		<parameter property="deptCode" jdbcType="VARCHAR" javaType="String" mode="IN" />
-		<parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"  
+		<parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
 				   resultMap="budgetStatusResult" />
 	</parameterMap>
 
@@ -142,7 +142,7 @@
 		<result property="remainingMonthBudget" column="REMAINING_MONTH_BUDGET" />
 		<result property="monthBudgetExecRatio" column="MONTH_BUDGET_EXEC_RATE"  />
 	</resultMap>
-	
+
 	<resultMap id="budgetBeanResult" type="kr.co.seoulit.account.budget.formulation.to.BudgetBean">
 		<result property="deptCode" column="DEPT_CODE"  />
 		<result property="workplaceCode" column="WORKPLACE_CODE"  />
@@ -172,7 +172,7 @@
 
 	<select id="selectBudgetAppl" parameterType="kr.co.seoulit.account.budget.formulation.to.BudgetBean" resultMap="budgetBeanResult">
 		<![CDATA[
- 			SELECT 
+ 			SELECT
  			M1_BUDGET as m1Budget,
  			M2_BUDGET as m2Budget,
  			M3_BUDGET as m3Budget,
@@ -185,7 +185,7 @@
  			M10_BUDGET as m10Budget,
  			M11_BUDGET as m11Budget,
  			M12_BUDGET as m12Budget
- 
+
  			 FROM BUDGET
 			where DEPT_CODE= #{deptCode}
 			and WORKPLACE_CODE= #{workplaceCode}

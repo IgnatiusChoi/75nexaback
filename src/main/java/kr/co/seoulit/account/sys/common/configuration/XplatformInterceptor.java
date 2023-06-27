@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class XplatformInterceptor implements HandlerInterceptor {
 
-    /*
+    /* 
         view 단에서 넘어온 데이터를 받아 jsp 에서 사용 가능 한 객체로 전처리(xml --> Object)
         Controller 에서 받기 전에 Interceptor 에 먼저 들어옴
     */
@@ -26,21 +26,12 @@ public class XplatformInterceptor implements HandlerInterceptor {
             throws Exception {
         System.out.println("XplatformInterceptor 실행");
         HttpPlatformRequest httpPlatformRequest = new HttpPlatformRequest(request); //tobesoft에서 재공한 xplatform을 사용하기 위한 객체
-
-        //xml parsing
-        //클라이언트쪽에 넘어온 xml데이터를 할당받는 부분
         httpPlatformRequest.receiveData();
-        //엑플에서 transcation 요청할때 클라이언트쪽에서 넘어온 데이터를 받기 위한 platformdata
         PlatformData reqData = httpPlatformRequest.getData();
-
-        // 서버에서 클라이언트에게 보내기 위해 객체 생성
         PlatformData resData = new PlatformData(); //tobesoft에서 재공한 xplatform을 사용하기 위한 객체
 
-        // 클라이언트쪽에서 받앙노 데이터셋과 변수를 디버그
         debug(reqData.getDataSetList(), reqData.getVariableList());
         System.out.println("========================"+reqData.getDataSetList()+"=====================찍히는값");
-
-        // httpservletrequest 객체에 set을 해준 뒤 컨트롤러에서 getattribute() 꺼낼 수 있다
         request.setAttribute("reqData", reqData);
         request.setAttribute("variableList", reqData.getVariableList());
         request.setAttribute("resData", resData);

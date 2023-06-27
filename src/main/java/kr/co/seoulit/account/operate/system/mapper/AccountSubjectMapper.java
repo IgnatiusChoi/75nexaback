@@ -2,6 +2,7 @@ package kr.co.seoulit.account.operate.system.mapper;
 
 import java.util.ArrayList;
 
+import kr.co.seoulit.account.operate.system.to.AccountDetailEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.seoulit.account.operate.system.to.AccountEntity;
@@ -13,7 +14,7 @@ public interface AccountSubjectMapper {
 
     public AccountEntity selectAccount(String accountCode);
 
-    public ArrayList<AccountEntity> selectDetailAccountList(String code);
+    public ArrayList<AccountDetailEntity> selectDetailAccountList(String parentAccountInnerCode);
 
     public ArrayList<AccountEntity> selectParentAccountList();
 
@@ -22,13 +23,13 @@ public interface AccountSubjectMapper {
     public ArrayList<AccountEntity> selectAccountListByName(String accountName);
 
     public ArrayList<AccountControlEntity> selectAccountControlList(String accountCode);
-    
+
     public ArrayList<AccountEntity> selectDetailBudgetList(String code);
-    
+
     public ArrayList<AccountEntity> selectParentBudgetList();
-    
+
     public ArrayList<PeriodEntity> selectAccountPeriodList();
-    
+
     public ArrayList<PeriodEntity> selectPeriodList();
 
     public ArrayList<AccountEntity> selectAccountList();

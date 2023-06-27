@@ -50,5 +50,6 @@ public class AuthorityMenuEntity extends BaseBean implements Serializable{
     private String authorityGroup;
 	@Transient
     private String url;
-    
+    @Transient
+	private String authorityLevel;
 }
