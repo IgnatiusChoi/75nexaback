@@ -3,15 +3,17 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.seoulit.account.operate.humanresource.mapper.UserAuthorityGroupMapper">
-	
+
 
 	<!-- selectDeptList -->
 	<select id="selectDeptList" resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
 		<![CDATA[
-			SELECT
-			 DISTINCT workplace_code as workplaceCode,
-			 workplace_name as workplaceName
-			FROM department
+		SELECT
+			DISTINCT workplace_code as workplaceCode,
+					 workplace_name as workplaceName,
+					 DEPT_CODE as deptCode,
+					 DEPT_NAME as deptName
+		FROM department
 		]]>
 	</select>
 
@@ -19,18 +21,18 @@
 	<!-- selectDetailDeptList -->
 	<select id="selectworkplaceCode"  resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
 		<![CDATA[
-				SELECT 
-				DISTINCT  
+				SELECT
+				DISTINCT
 						WORKPLACE_CODE AS workplaceCode,
 						WORKPLACE_NAME AS workplaceName
 						FROM DEPARTMENT
-						ORDER BY WORKPLACE_CODE 
+						ORDER BY WORKPLACE_CODE
 		]]>
 	</select>
-	
+
 	<select id="selectdeptCode" parameterType="String" resultType="kr.co.seoulit.account.operate.humanresource.to.DepartmentBean">
 		<![CDATA[
-					SELECT 
+					SELECT
 						DEPT_CODE AS deptCode,
 						DEPT_NAME AS deptName
 						FROM DEPARTMENT

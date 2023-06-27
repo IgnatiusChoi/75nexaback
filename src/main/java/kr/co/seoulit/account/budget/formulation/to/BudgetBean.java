@@ -7,9 +7,10 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Dataset(name = "ds_budget")
+@Dataset(name = "ds_budget1")
 public class BudgetBean extends BaseBean{
-	
+
+	private String accountInnerCode;
 	private String deptCode;
 	private String budgetCode;
 	private String workplaceCode;
@@ -27,7 +28,7 @@ public class BudgetBean extends BaseBean{
 	private int m10Budget;
 	private int m11Budget;
 	private int m12Budget;
-	
-	
-	
+
+
+
 }

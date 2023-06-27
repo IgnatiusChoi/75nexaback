@@ -3,6 +3,7 @@ package kr.co.seoulit.account.operate.system.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import kr.co.seoulit.account.operate.system.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +16,7 @@ import kr.co.seoulit.account.operate.system.mapper.CustomerMapper;
 import kr.co.seoulit.account.operate.system.repository.AccountControlRepository;
 import kr.co.seoulit.account.operate.system.repository.AccountRepository;
 //import kr.co.seoulit.account.operate.system.repository.WorkplaceRepository;
-import kr.co.seoulit.account.operate.system.to.AccountEntity;
-import kr.co.seoulit.account.operate.system.to.AccountControlEntity;
-import kr.co.seoulit.account.operate.system.to.PeriodEntity;
-import kr.co.seoulit.account.operate.system.to.AuthorityEmpBean;
-import kr.co.seoulit.account.operate.system.to.AuthorityMenuEntity;
-import kr.co.seoulit.account.operate.system.to.BoardBean;
-import kr.co.seoulit.account.operate.system.to.BusinessBean;
-import kr.co.seoulit.account.operate.system.to.DetailBusinessBean;
-import kr.co.seoulit.account.operate.system.to.WorkplaceEntity;
+
 
 @Service
 @Transactional
@@ -74,10 +67,10 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public ArrayList<AccountEntity> findDetailAccountList(String code) {
+	public ArrayList<AccountDetailEntity> findDetailAccountList(String parentAccountInnerCode) {
 
-		ArrayList<AccountEntity> accountList = null;
-		accountList = accountDAO.selectDetailAccountList(code);
+		ArrayList<AccountDetailEntity> accountList = null;
+		accountList = accountDAO.selectDetailAccountList(parentAccountInnerCode);
 
 		return accountList;
 	}
@@ -147,7 +140,7 @@ public class SystemServiceImpl implements SystemService {
 		// TODO Auto-generated method stub
 		ArrayList<PeriodEntity> PeriodList = null;
 		PeriodList = accountDAO.selectPeriodList();
-		
+
 		return PeriodList;
 	}
 
@@ -245,7 +238,7 @@ public class SystemServiceImpl implements SystemService {
 			customerDAO.deleteWorkplace(workplaceCode);
 			System.out.println("사업장삭제완료:" + workplaceCode);
 		}
-	
+
 
 	@Override
 	public void modifyApprovalStatus(ArrayList<String> getCodes, String status) {
@@ -294,22 +287,22 @@ public class SystemServiceImpl implements SystemService {
 	}
 	@Override
 	public void insertBoard(BoardBean bean) {
-		
+
 		BoardDAO.insertBoard(bean);
-		
+
 	}
 	@Override
 	public void updateBoard(BoardBean bean) {
-		
+
 		BoardDAO.updateBoard(bean);
-		
+
 	}
 	@Override
 	public ArrayList<BoardBean> selectBoardList(){
 		return (ArrayList<BoardBean>) BoardDAO.selectBoardList();
 	}
 	public ArrayList<BoardBean> selectBoarddetail(String row){
-		
+
 		return (ArrayList<BoardBean>) BoardDAO.selectBoarddetail(row);
 	}
 

@@ -2,6 +2,7 @@ package kr.co.seoulit.account.operate.system.controller;
 
 import java.util.ArrayList;
 
+import kr.co.seoulit.account.operate.system.to.AccountDetailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,23 +24,23 @@ import kr.co.seoulit.account.sys.common.mapper.DatasetBeanMapper;
 @RestController
 @RequestMapping("/operate")
 public class AccountSubjectController {
-	
+
     private SystemService systemService;
     private DatasetBeanMapper datasetBeanMapper;
-    
+
     @Autowired
     public AccountSubjectController(SystemService systemService, DatasetBeanMapper datasetBeanMapper) {
     	this.systemService=systemService;
     	this.datasetBeanMapper=datasetBeanMapper;
-    	
+
     }
-	
+
     ModelAndView mav = null;
     ModelMap map = new ModelMap();
-    
+
     @GetMapping("/account")
     public AccountEntity findAccount(@RequestParam String accountCode) {
-      
+
             AccountEntity accountEntity = systemService.findAccount(accountCode);
 
         return accountEntity;
@@ -56,7 +57,7 @@ public class AccountSubjectController {
 
         return null;
     }
-    
+
     /* nexacro */
     @RequestMapping(value = "/findAccountList")
     public ArrayList<AccountEntity> findAccountList(@RequestAttribute("reqData")PlatformData reqData,
@@ -65,7 +66,7 @@ public class AccountSubjectController {
         datasetBeanMapper.beansToDataset(resData, accountList, AccountEntity.class);
         return null;
     }
-    
+
     /* nexacro */
     @RequestMapping(value = "/findAccountDetailList")
     public ArrayList<AccountControlEntity> findAccountDetailList(@RequestAttribute("reqData")PlatformData reqData,
@@ -84,7 +85,7 @@ public class AccountSubjectController {
         ArrayList<AccountEntity> accountListByName = systemService.findAccountListByName(accountName);
 
         datasetBeanMapper.beansToDataset(resData, accountListByName, AccountEntity.class);
- 
+
         return null;
     }
   //  @GetMapping("/parentaccountlist")
@@ -95,14 +96,14 @@ public class AccountSubjectController {
         return null;
     }
     //@GetMapping("/detailaccountlist")
-    @RequestMapping(value = "/Detailaccountlist")
-    public ArrayList<AccountEntity> findDetailAccountList(@RequestAttribute("reqData")PlatformData reqData,
-            @RequestAttribute("resData")PlatformData resData) throws Exception {
-        String code = reqData.getVariable("code").getString();
+    @RequestMapping(value = "/detailaccountlist")
+    public ArrayList<AccountDetailEntity> findDetailAccountList(@RequestAttribute("reqData")PlatformData reqData,
+                                                                @RequestAttribute("resData")PlatformData resData) throws Exception {
+        String parentAccountInnerCode = reqData.getVariable("parentAccountInnerCode").getString();
 
-            ArrayList<AccountEntity> accountList = systemService.findDetailAccountList(code);
-            datasetBeanMapper.beansToDataset(resData, accountList, AccountEntity.class);
-         
+            ArrayList<AccountDetailEntity> accountList = systemService.findDetailAccountList(parentAccountInnerCode);
+            datasetBeanMapper.beansToDataset(resData, accountList, AccountDetailEntity.class);
+
         return null;
     }
 
@@ -118,22 +119,22 @@ public class AccountSubjectController {
 //    }
     @GetMapping("/detailbudgetlist")
     public ArrayList<AccountEntity> findDetailBudgetList(@RequestParam String code) {
-   
+
             ArrayList<AccountEntity> budgetList = systemService.findDetailBudgetList(code);
-           
+
         return budgetList;
     }
-    
+
     @GetMapping("/parentbudgetlist")
     public ArrayList<AccountEntity> findParentBudgetList() {
- 
+
             ArrayList<AccountEntity> parentBudgetList = systemService.findParentBudgetList();
-      
+
         return parentBudgetList;
     }
    // @RequestMapping("/accountperiodlist")
     public ArrayList<PeriodEntity> findAccountPeriodList() {
-     
+
             ArrayList<PeriodEntity> accountPeriodList = systemService.findAccountPeriodList();
 
         return accountPeriodList;
@@ -141,7 +142,7 @@ public class AccountSubjectController {
     @RequestMapping("/accountperiodlist")
     public ArrayList<PeriodEntity> findPeriodList(@RequestAttribute("reqData")PlatformData reqData,
             @RequestAttribute("resData")PlatformData resData) throws Exception {
-     
+
             ArrayList<PeriodEntity> accountPeriodList = systemService.findPeriodList();
             datasetBeanMapper.beansToDataset(resData, accountPeriodList, PeriodEntity.class);
 

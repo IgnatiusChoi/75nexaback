@@ -39,30 +39,30 @@ public class HRController {
 
     ModelAndView mav;
     ModelMap map = new ModelMap();
-    
+
     @GetMapping("/employeelist")
 	public ArrayList<EmployeeEntity> findEmployeeList(@RequestParam String deptCode) {
 
             ArrayList<EmployeeEntity> empList = humanResourceService.findEmployeeList(deptCode);
             return empList;
    }
-    
+
     @RequestMapping(value="/saveEmpImg",method={RequestMethod.GET, RequestMethod.POST})
     public void saveEmpImg(@RequestAttribute("reqData") PlatformData reqData,
             @RequestAttribute("resData") PlatformData resData) throws Exception{
-    	
-    		String image = reqData.getVariable("image").getString(); 
-    		String empCode = reqData.getVariable("empCode").getString(); 
+
+    		String image = reqData.getVariable("image").getString();
+    		String empCode = reqData.getVariable("empCode").getString();
     		System.out.println("image    :"+image);
     		System.out.println("empCode    :"+empCode);
     		HashMap<String, String> map = new HashMap<>();
     		map.put("image", image);
     		map.put("empCode", empCode);
             humanResourceService.saveEmpImg(map);
-          
-     
+
+
     }
-    
+
     /* nexacro */
   @RequestMapping("/findEmployeeList" )
   public ArrayList<EmployeeEntity> findEmployeeList(@RequestAttribute("reqData") PlatformData reqData,
@@ -72,12 +72,12 @@ public class HRController {
       datasetBeanMapper.beansToDataset(resData, empList, EmployeeEntity.class);
       return null;
   }
-    
+
     @GetMapping("/employeeListall")
     public ArrayList<EmployeeEntity> findEmployeeListAll() {
 
             ArrayList<EmployeeEntity> empList = humanResourceService.findEmployeeList();
-            
+
             return empList;
     }
 
@@ -91,77 +91,79 @@ public class HRController {
 
     @GetMapping("/batchempinfo")
     public void batchEmpInfo(@RequestParam String employeeInfo,@RequestParam String image) {
-      
+
             JSONObject jsonObject = JSONObject.fromObject(employeeInfo);
-         
+
             EmployeeEntity employeeEntity = (EmployeeEntity) JSONObject.toBean(jsonObject, EmployeeEntity.class);
             employeeEntity.setImage(image);
             humanResourceService.batchEmployeeInfo(employeeEntity);
-           
-           
+
+
     }
 
     @GetMapping("/emptyempbean")
     public ModelAndView EmptyEmpBean(HttpServletRequest request, HttpServletResponse response) {
-       
+
         return null;
     }
 
     @GetMapping("/batchemp")
     public void batchEmp(@RequestParam String JoinEmployee) {
-     
+
             JSONObject jsonObject = JSONObject.fromObject(JoinEmployee);
-            
+
             EmployeeEntity employeeEntity = (EmployeeEntity) JSONObject.toBean(jsonObject, EmployeeEntity.class);
 
             humanResourceService.registerEmployee(employeeEntity);
-          
+
     }
-    
+
     @RequestMapping("/deleteEmployee")
     public void removeEmployee(@RequestAttribute("reqData") PlatformData reqData,
             @RequestAttribute("resData") PlatformData resData) throws Exception{
     	String empCode = reqData.getVariable("empCode").getString();
-    	
-           
+
+
 //            EmployeeEntity employeeEntity = new EmployeeEntity();
 //            employeeEntity.setEmpCode(empCode);
             humanResourceService.removeEmployee(empCode);
-          
-     
+
+
     }
     @GetMapping("/deptlist")
-    public ArrayList<DepartmentBean> findDeptList() {
-       
+    public ArrayList<DepartmentBean> findDeptList(@RequestAttribute("reqData") PlatformData reqData,
+                                                  @RequestAttribute("resData") PlatformData resData) throws Exception {
+
             ArrayList<DepartmentBean> deptList = humanResourceService.findDeptList();
-         
-        return deptList;
+            datasetBeanMapper.beansToDataset(resData, deptList, DepartmentBean.class);
+
+        return null;
     }
-    
+
     @RequestMapping("/selectworkplaceCode")
     public ArrayList<DepartmentBean> selectworkplaceCode(@RequestAttribute("reqData") PlatformData reqData,
             @RequestAttribute("resData") PlatformData resData) throws Exception{
 
             ArrayList<DepartmentBean> workplaceList = humanResourceService.selectworkplaceCode();
             datasetBeanMapper.beansToDataset(resData, workplaceList, DepartmentBean.class);
-        
+
         return null;
     }
     @RequestMapping("/selectdeptCode")
     public ArrayList<DepartmentBean> selectdeptCode(@RequestAttribute("reqData") PlatformData reqData,
     		@RequestAttribute("resData") PlatformData resData) throws Exception{
     		String code=reqData.getVariable("code").getString();
-    	
+
     	ArrayList<DepartmentBean> deptList = humanResourceService.selectdeptCode(code);
     	datasetBeanMapper.beansToDataset(resData, deptList, DepartmentBean.class);
-    	
+
     	return null;
     }
 
     public ArrayList<DepartmentBean> findDeptList2() {
-        
+
    	 ArrayList<DepartmentBean> deptList = humanResourceService.findDeptList2();
-        
+
        return deptList;
    }
 }
