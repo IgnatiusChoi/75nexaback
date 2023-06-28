@@ -3,12 +3,11 @@ package kr.co.seoulit.account.budget.formulation.service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Vector;
 
 import kr.co.seoulit.account.budget.formulation.Repository.BudgetRepository;
 import kr.co.seoulit.account.budget.formulation.to.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +19,20 @@ import javax.persistence.EntityManager;
 @Transactional
 public class FormulationServiceImpl implements FormulationService {
 
-	@Autowired
+
 	private FormulationMapper formulationDAO;
-	@Autowired
+
 	private BudgetRepository budgetRepository;
-	@Autowired
+
 	private EntityManager em;
+
+
+	public FormulationServiceImpl(FormulationMapper formulationDAO, BudgetRepository budgetRepository, EntityManager em) {
+		this.formulationDAO = formulationDAO;
+		this.budgetRepository = budgetRepository;
+		this.em = em;
+	}
+
 
 	@Override
 	public BudgetBean findBudget(BudgetBean bean) {
@@ -56,38 +63,42 @@ public class FormulationServiceImpl implements FormulationService {
 
 	@Override
 	public BudgetRequestForRecon budgetRequestForRecon(BudgetRequestForRecon budgetRequestForRecon) {
-		System.out.println("000000000");
 		BudgetEntity budgetEntity = budgetRequestForRecon.toEntity();
-		System.out.println("budgetEntity11 = " + budgetEntity.toString());
 		BudgetEntity findBudgetEntity = budgetRepository.findByBudgetRequest(budgetEntity);
-		System.out.println("findBudgetEntity11 = " + findBudgetEntity);
 
 		return BudgetRequestForRecon.fromEntity(findBudgetEntity);
 	}
 
 	@Override
-	public BudgetRequest compBudget(BudgetRequest originRequest, BudgetRequest updateRequest) {
+	public void compBudget(BudgetRequest updateRequest) {
 
-		BudgetEntity originEntity = originRequest.toEntity();
 		BudgetEntity updateEntity = updateRequest.toEntity();
 
-		BudgetEntity findBudgetEntity = budgetRepository.findByBudgetRequest(originEntity);
-		BudgetEntity findEmEntity = em.find(findBudgetEntity.getClass(), findBudgetEntity.budgetPK);
+		BudgetEntity findEmEntity = em.find(updateEntity.getClass(), updateEntity.budgetPK);
 
-		findEmEntity.budgetPK.setBudgetingCode(updateRequest.getBudgetingCode());
-		for (int i = 1; i <= 12; i++) {
-			String fieldName = "m" + i + "Budget";
-			try {
-				Field field = BudgetEntity.class.getDeclaredField(fieldName);
-				field.setAccessible(true);
-				Object value = field.get(updateEntity);
-				field.set(findEmEntity, value);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
+		if (findEmEntity != null) {
+			ModelMapper modelMapper = new ModelMapper();
+			modelMapper.map(updateEntity, findEmEntity);
+			em.persist(findEmEntity);
 		}
-		em.persist(findEmEntity);
-		return null;
+		else {
+			em.persist(updateEntity);
+		}
+	}
+
+	@Override
+	public void reconBudget(BudgetRequestForRecon updateRequest) {
+		BudgetEntity updateEntity = updateRequest.toEntity();
+
+		BudgetEntity findEmEntity = em.find(updateEntity.getClass(), updateEntity.budgetPK);
+		if (findEmEntity != null) {
+			ModelMapper modelMapper = new ModelMapper();
+			modelMapper.map(updateEntity, findEmEntity);
+			em.persist(findEmEntity);
+		}
+		else {
+			em.persist(updateEntity);
+		}
 	}
 
 	@Override
@@ -109,13 +120,30 @@ public class FormulationServiceImpl implements FormulationService {
 	}
 
 	@Override
-	public Vector<BudgetStatusBean> findBudgetStatus(BudgetBean bean) {
+	public ArrayList<BudgetStatusBean> findBudgetStatus(BudgetBean bean) {
 		// TODO Auto-generated method stub
 
-		Vector<BudgetStatusBean> beans = null;
-		beans = formulationDAO.selectBudgetStatus(bean);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("accountPeriodNo", bean.getAccountPeriodNo());
+		map.put("deptCode", bean.getDeptCode());
+		map.put("workplaceCode", bean.getWorkplaceCode());
+		formulationDAO.selectBudgetStatus(map);
+		ArrayList<BudgetStatusBean> result = (ArrayList<BudgetStatusBean>) map.get("RESULT");
+		return result;
+	}
 
-		return beans;
+	@Override
+	public ArrayList<BudgetComparisonBean> findBudgetComparison(BudgetBean bean) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("accountPeriodNo", bean.getAccountPeriodNo());
+		map.put("deptCode", bean.getDeptCode());
+		map.put("workplaceCode", bean.getWorkplaceCode());
+		map.put("accountInnerCode", bean.getAccountInnerCode());
+
+		formulationDAO.selectComparisonBudget(map);
+		ArrayList<BudgetComparisonBean> result = (ArrayList<BudgetComparisonBean>) map.get("RESULT");
+		return result;
 	}
 
 	@Override
