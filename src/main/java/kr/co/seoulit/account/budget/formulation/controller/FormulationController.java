@@ -130,7 +130,7 @@ public class FormulationController{
 	}
 
 	 @RequestMapping("/compBudget")
-	 public ArrayList<BudgetRequest> compBudget(@RequestAttribute("reqData") PlatformData reqData,
+	 public void compBudget(@RequestAttribute("reqData") PlatformData reqData,
 												 @RequestAttribute("resData")PlatformData resData) throws Exception {
 
 		 String deptCode=reqData.getVariable("deptCode").getString();
@@ -138,7 +138,6 @@ public class FormulationController{
 		 String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
 		 String accountInnerCode=reqData.getVariable("accountInnerCode").getString();
 		 String budgetingCode=reqData.getVariable("budgetingCode").getString();
-		 String originBudgetingCode="1";
 
 		 BudgetRequest updateRequest = datasetBeanMapper.datasetToBean(reqData, BudgetRequest.class);
 		 updateRequest.setAccountInnerCode(accountInnerCode);
@@ -147,13 +146,9 @@ public class FormulationController{
 		 updateRequest.setWorkplaceCode(workplaceCode);
 		 updateRequest.setBudgetingCode(budgetingCode);
 
-		 BudgetRequest originRequest = new BudgetRequest(deptCode, workplaceCode, accountPeriodNo, accountInnerCode, originBudgetingCode);
+		 formulationService.compBudget(updateRequest);
 
-		 BudgetRequest result = formulationService.compBudget(originRequest, updateRequest);
 
-		 datasetBeanMapper.beanToDataset(resData, result, BudgetRequest.class);
-
-		 return null;
 	 }
 
 	@RequestMapping("/budgetListForRecon")
@@ -175,19 +170,80 @@ public class FormulationController{
 		return null;
 	}
 
+	@RequestMapping("/reconBudget")
+	public void reconBudget(@RequestAttribute("reqData") PlatformData reqData,
+															   @RequestAttribute("resData")PlatformData resData) throws Exception {
+		String deptCode=reqData.getVariable("deptCode").getString();
+		String workplaceCode=reqData.getVariable("workplaceCode").getString();
+		String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
+		String accountInnerCode=reqData.getVariable("accountInnerCode").getString();
+		String budgetingCode=reqData.getVariable("budgetingCode").getString();
 
-    @GetMapping("/budgetstatus")
-	 public Vector<BudgetStatusBean> findBudgetStatus(@RequestParam String budgetObj) {
+		BudgetRequestForRecon updateRequest = datasetBeanMapper.datasetToBean(reqData, BudgetRequestForRecon.class);
+		updateRequest.setAccountInnerCode(accountInnerCode);
+		updateRequest.setAccountPeriodNo(accountPeriodNo);
+		updateRequest.setDeptCode(deptCode);
+		updateRequest.setWorkplaceCode(workplaceCode);
+		updateRequest.setBudgetingCode(budgetingCode);
 
-    	JSONObject budgetJsonObj = JSONObject.fromObject(budgetObj); //예산
-		 BudgetBean budgetBean =beanCreator.create(budgetJsonObj, BudgetBean.class);
-		Vector<BudgetStatusBean> beans=formulationService.findBudgetStatus(budgetBean);
-
-	        return beans;
-	 }
+		formulationService.reconBudget(updateRequest);
+	}
 
 
-    @RequestMapping(value = "/budgetappl", method = RequestMethod.POST)
+//    @GetMapping("/budgetStatus")
+//	 public Vector<BudgetStatusBean> findBudgetStatus(@RequestParam String budgetObj) {
+//
+//    	JSONObject budgetJsonObj = JSONObject.fromObject(budgetObj); //예산
+//		 BudgetBean budgetBean =beanCreator.create(budgetJsonObj, BudgetBean.class);
+//		Vector<BudgetStatusBean> beans=formulationService.findBudgetStatus(budgetBean);
+//
+//	        return beans;
+//	 }
+
+
+	@RequestMapping("/budgetStatus")
+	public ArrayList<BudgetStatusBean> budgetStatus(@RequestAttribute("reqData") PlatformData reqData,
+														 @RequestAttribute("resData")PlatformData resData) throws Exception {
+		String deptCode=reqData.getVariable("deptCode").getString();
+		String workplaceCode=reqData.getVariable("workplaceCode").getString();
+		String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
+
+		BudgetBean budgetBean = new BudgetBean();
+ 		budgetBean.setDeptCode(deptCode);
+ 		budgetBean.setWorkplaceCode(workplaceCode);
+ 		budgetBean.setAccountPeriodNo(accountPeriodNo);
+
+		ArrayList<BudgetStatusBean> result = formulationService.findBudgetStatus(budgetBean);
+
+		datasetBeanMapper.beansToDataset(resData, result, BudgetStatusBean.class);
+
+		return null;
+	}
+
+	@RequestMapping("/budgetComparison")
+	public ArrayList<BudgetStatusBean> budgetComparison(@RequestAttribute("reqData") PlatformData reqData,
+													@RequestAttribute("resData")PlatformData resData) throws Exception {
+		String deptCode=reqData.getVariable("deptCode").getString();
+		String workplaceCode=reqData.getVariable("workplaceCode").getString();
+		String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
+		String accountInnerCode=reqData.getVariable("accountInnerCode").getString();
+
+		BudgetBean budgetBean = new BudgetBean();
+		budgetBean.setDeptCode(deptCode);
+		budgetBean.setWorkplaceCode(workplaceCode);
+		budgetBean.setAccountPeriodNo(accountPeriodNo);
+		budgetBean.setAccountInnerCode(accountInnerCode);
+
+		ArrayList<BudgetComparisonBean> result = formulationService.findBudgetComparison(budgetBean);
+
+		datasetBeanMapper.beansToDataset(resData, result, BudgetComparisonBean.class);
+
+		return null;
+	}
+
+
+
+	@RequestMapping(value = "/budgetappl", method = RequestMethod.POST)
 	 public ArrayList<BudgetBean> findBudgetAppl(@RequestParam String budgetObj) {
 
 

@@ -15,11 +15,14 @@ public interface FormulationService {
 	public BudgetRequest budgetListForComp(BudgetRequest budgetRequest);
 	public BudgetRequestForRecon budgetRequestForRecon(BudgetRequestForRecon budgetRequestForRecon);
 
-	public BudgetRequest compBudget(BudgetRequest originRequest, BudgetRequest updateRequest);
+	public void compBudget(BudgetRequest updateRequest);
+	public void reconBudget(BudgetRequestForRecon updateRequest);
 
 	public ArrayList<BudgetBean> findBudgetAppl(BudgetBean bean);
 
-	public Vector<BudgetStatusBean> findBudgetStatus(BudgetBean bean);
+	public ArrayList<BudgetStatusBean> findBudgetStatus(BudgetBean bean);
+
+	public ArrayList<BudgetComparisonBean> findBudgetComparison(BudgetBean bean);
 
 	public ArrayList<BudgetCodeBean> findBudgetCode();
 
