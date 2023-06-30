@@ -202,23 +202,6 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public String modifySlip(SlipEntity slipEntity, ArrayList<JournalEntity> journalEntities) {
-
-//
-//        	slipDAO.updateSlip(slipEntity);
-//            for (JournalEntity journalEntity : journalEntities) {
-//            	System.out.println(journalEntity.getJournalNo()+"@@@@@@#");
-//                journalDAO.updateJournal(journalEntity);
-//
-//            if(journalEntity.getJournalDetailList()!=null) {
-//
-//            	for(JournalDetailEntity journalDetailEntity: journalEntity.getJournalDetailList()) {
-//
-//            		journalDAO.updateJournalDetail(journalDetailEntity);
-//            	}}
-//            }
-//
-//        return slipEntity.getSlipNo();
-
         slipRepository.mergeSlip(slipEntity);
         for (JournalEntity journalEntity : journalEntities) {
             journalDAO.updateJournal(journalEntity);
