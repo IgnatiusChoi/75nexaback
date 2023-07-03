@@ -4,12 +4,29 @@
 <mapper
         namespace="kr.co.seoulit.account.settlement.costStatement.mapper.CostStatementMapper">
 
+    <resultMap id="CostStatementResult" type="kr.co.seoulit.account.settlement.costStatement.to.CostStatementBean">
+        <result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>
+        <result property="accountName" column="ACCOUNT_NAME"/>
+        <result property="parentAccountCode" column="PARENT_ACCOUNT_CODE"/>
+        <result property="cost" column="COST"/>
+        <result property="costSummary" column="COST_SUMMARY"/>
+        <result property="earlyCost" column="EARLY_COST"/>
+        <result property="earlyCostSummary" column="EARLY_COST_SUMMARY"/>
+        <result property="isThisYear" column="IS_THIS_YEAR"/>
+    </resultMap>
 
-<!--    <select id="selectCostStatement" parameterMap="costStatementParams" statementType="CALLABLE">-->
-<!--        <![CDATA[-->
-<!--            {call P_COST_STATEMENT(?,?,?,?)}-->
-<!--        ]]>-->
-<!--    </select>-->
+    <parameterMap id="costStatementParams" type="java.util.HashMap">
+        <parameter property="selectedDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+        <parameter property="ERROR_CODE" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
+        <parameter property="ERROR_MSG" jdbcType="VARCHAR" javaType="String" mode="OUT"/>
+        <parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT" resultMap="CostStatementResult"/>
+    </parameterMap>
+
+    <select id="selectCostStatement" parameterMap="costStatementParams" statementType="CALLABLE">
+        <![CDATA[
+            {call P_COST_STATEMENT(?,?,?,?)}
+        ]]>
+    </select>
 
 </mapper>
 
