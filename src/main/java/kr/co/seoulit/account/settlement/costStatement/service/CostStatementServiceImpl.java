@@ -1,9 +1,13 @@
 package kr.co.seoulit.account.settlement.costStatement.service;
 
 import kr.co.seoulit.account.settlement.costStatement.mapper.CostStatementMapper;
+import kr.co.seoulit.account.settlement.costStatement.to.CostStatementBean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -12,12 +16,15 @@ public class CostStatementServiceImpl implements CostStatementService{
     @Autowired
     private CostStatementMapper costStatementDAO;
 
-//    @Override
-//    public ArrayList<CostStatementBean> findCostStatement(String date) {
-//        HashMap<String, String> map = new HashMap<String, String>();
-//        map.put("date", date);
-//        ArrayList<CostStatementBean> costStatementList = costStatementDAO.selectCostStatement(map);
-//
-//        return costStatementList;
-//    }
+    //원가명세서 조회
+    @Override
+    public ArrayList<CostStatementBean> findCostStatement(HashMap<String,Object> params) {
+
+        System.out.println("원가명세서_ServiceImpl");
+        System.out.println("selectedDate : " + params);
+
+        costStatementDAO.selectCostStatement(params);
+        System.out.println("params1 : " + params);
+        return null;
+    }
 }

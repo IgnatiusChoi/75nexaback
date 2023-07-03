@@ -38,7 +38,7 @@ public class TotalTrialBalanceController {
 //		HashMap<String,Object> params = new HashMap<>();
 //		params.put("accountPeriodNo",accountPeriodNo);
 //		params.put("callResult",callResult);
-//		
+//
 //
 //             HashMap<String, Object> closingResult = trialBalanceService.findEarlyStatements(params);
 //
@@ -49,10 +49,10 @@ public class TotalTrialBalanceController {
 	@RequestMapping("/totaltrialbalance")
 	public HashMap<String,Object> findTotalTrialBalance( @RequestAttribute("reqData") PlatformData reqData,
 			@RequestAttribute("resData") PlatformData resData) throws Exception {
-		
+
 		String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
 		String callResult=reqData.getVariable("callresult").getString();
-		 
+
 		HashMap<String,Object> params = new HashMap<>();
 		params.put("accountPeriodNo",accountPeriodNo);
 		params.put("callResult",callResult);
@@ -60,9 +60,9 @@ public class TotalTrialBalanceController {
 		trialBalanceService.findTotalTrialBalance(params);
 		System.out.println("@@@@@@@@@@@@@@@"+params);
 		ArrayList<TotalTrialBalanceBean>  bean = (ArrayList<TotalTrialBalanceBean>) params.get("totalTrialBalance");
-	  datasetBeanMapper.beansToDataset(resData, bean, TotalTrialBalanceBean.class);
-        
-          
+	  	datasetBeanMapper.beansToDataset(resData, bean, TotalTrialBalanceBean.class);
+
+
         return null;
 
 	}
@@ -70,13 +70,13 @@ public class TotalTrialBalanceController {
 	@RequestMapping("/selecttotaltrialbalance")
 	public HashMap<String,Object> SelectTotalTrialBalance( @RequestAttribute("reqData") PlatformData reqData,
 			@RequestAttribute("resData") PlatformData resData) throws Exception {
-		
+
 		String accountPeriodNo=reqData.getVariable("accountPeriodNo").getString();
 		String callResult=reqData.getVariable("callresult").getString();
 
-		
+
 		//String accountPeriodNo = baseService.findPeriodNo(year);
-		 
+
 		HashMap<String,Object> params = new HashMap<>();
 		params.put("accountPeriodNo",accountPeriodNo);
 		params.put("callResult",callResult);
@@ -85,8 +85,8 @@ public class TotalTrialBalanceController {
 		System.out.println("@@@@@@@@@@@@@@@"+params);
 		ArrayList<TotalTrialBalanceBean>  bean = (ArrayList<TotalTrialBalanceBean>) params.get("totalTrialBalance");
 	    datasetBeanMapper.beansToDataset(resData, bean, TotalTrialBalanceBean.class);
-        
-          
+
+
         return null;
 
 	}

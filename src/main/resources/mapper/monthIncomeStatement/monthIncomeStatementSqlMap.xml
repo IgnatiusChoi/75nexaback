@@ -4,11 +4,33 @@
 <mapper
         namespace="kr.co.seoulit.account.settlement.monthIncomeStatement.mapper.MonthIncomeStatementMapper">
 
+    <resultMap id="incomeStatementResult" type="kr.co.seoulit.account.settlement.monthIncomeStatement.to.MonthIncomeStatementBean">
+        <result property="year" column="YEAR"/>
+        <result property="month" column="MONTH"/>
+        <result property="salesSummary" column="SALES_SUMMARY"/>
+        <result property="salesCostSummary" column="SALES_COST_SUMMARY"/>
+        <result property="grossMargin" column="GROSS_MARGIN"/>
+        <result property="salesManageCostSummary" column="SALES_MANAGE_COST_SUMMARY"/>
+        <result property="operatingProfit" column="OPERATING_PROFIT"/>
+        <result property="nonOperatingProfitSummary" column="NON_OPERATING_PROFIT_SUMMARY"/>
+        <result property="nonOperatingCostSummary" column="NON_OPERATING_COST_SUMMARY"/>
+        <result property="ordinaryProfit" column="ORDINARY_PROFIT"/>
+        <result property="corporateTaxSummary" column="CORPORATE_TAX_SUMMARY"/>
+        <result property="netIncome" column="NET_INCOME"/>
+    </resultMap>
 
-<!--    <select id="selectMonthIncomeStatement" parameterMap="monthIncomeStatementParams" statementType="CALLABLE">-->
-<!--        <![CDATA[-->
-<!--            {call P_MONTH_INCOME_STATEMENT(?,?,?,?)}-->
-<!--        ]]>-->
-<!--	</select>-->
+    <parameterMap id="incomeStatementParams" type="java.util.HashMap">
+        <parameter property="selectedDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
+        <parameter property="ERROR_CODE" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
+        <parameter property="ERROR_MSG" jdbcType="VARCHAR" javaType="String" mode="OUT"/>
+        <parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT" resultMap="incomeStatementResult"/>
+    </parameterMap>
+
+<!--    월별손익계산서 조회-->
+    <select id="selectMonthIncomeStatement" parameterMap="incomeStatementParams" statementType="CALLABLE">
+        <![CDATA[
+            {call P_MONTH_INCOME_STATEMENT(?,?,?,?)}
+        ]]>
+	</select>
 
 </mapper>
