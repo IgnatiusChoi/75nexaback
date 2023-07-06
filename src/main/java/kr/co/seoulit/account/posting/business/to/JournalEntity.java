@@ -38,6 +38,7 @@ public class JournalEntity extends BaseBean {
 		@Transient
 		private String accountName;
 	    private String customerCode;
+		private String customerName;
 
 	    @Column(columnDefinition = "number")
 	    private String leftDebtorPrice;
