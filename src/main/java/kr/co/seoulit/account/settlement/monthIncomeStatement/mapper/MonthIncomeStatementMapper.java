@@ -10,5 +10,5 @@ import java.util.HashMap;
 public interface MonthIncomeStatementMapper {
 
     //월별손익계산서 조회
-    public ArrayList<MonthIncomeStatementBean> selectMonthIncomeStatement(HashMap<String,Object> params);
+    public HashMap<String, Object>  selectMonthIncomeStatement(HashMap<String,Object> params);
 }

@@ -82,6 +82,7 @@
 		]]>
 	</select>
 
+<!--	상세 계정코드 가져오기-->
 	<select id="selectDetailAccountList" parameterType="String" resultType="kr.co.seoulit.account.operate.system.to.AccountDetailEntity">
 		<![CDATA[
 		SELECT b.ACCOUNT_INNER_CODE			AS accountInnerCode,

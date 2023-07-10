@@ -8,5 +8,7 @@ import java.util.HashMap;
 public interface CostStatementService {
 
     //원가명세서 조회
+    //ArrayList<CostStatementBean> findCostStatement(HashMap<String,Object> params);
     ArrayList<CostStatementBean> findCostStatement(HashMap<String,Object> params);
+
 }

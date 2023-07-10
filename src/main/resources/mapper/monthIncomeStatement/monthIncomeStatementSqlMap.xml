@@ -27,7 +27,7 @@
     </parameterMap>
 
 <!--    월별손익계산서 조회-->
-    <select id="selectMonthIncomeStatement" parameterMap="incomeStatementParams" statementType="CALLABLE">
+    <select id="selectMonthIncomeStatement" parameterMap="incomeStatementParams" statementType="CALLABLE" resultType="java.util.HashMap">
         <![CDATA[
             {call P_MONTH_INCOME_STATEMENT(?,?,?,?)}
         ]]>

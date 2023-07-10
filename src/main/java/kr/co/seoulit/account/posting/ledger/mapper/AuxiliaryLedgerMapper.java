@@ -9,8 +9,9 @@ import kr.co.seoulit.account.posting.ledger.to.CashJournalBean;
 
 @Mapper
 public interface AuxiliaryLedgerMapper {
-	
+
+	//현금출납장 조회
 	public ArrayList<CashJournalBean> selectCashJournalList(HashMap<String, String> map);
-	
+
 	public ArrayList<CashJournalBean> selectTotalCashJournalList(HashMap<String, String> map);
 }

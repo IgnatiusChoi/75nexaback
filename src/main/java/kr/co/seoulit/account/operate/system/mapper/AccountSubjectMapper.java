@@ -14,6 +14,7 @@ public interface AccountSubjectMapper {
 
     public AccountEntity selectAccount(String accountCode);
 
+    //상세 계정코드 가져오기
     public ArrayList<AccountDetailEntity> selectDetailAccountList(String parentAccountInnerCode);
 
     public ArrayList<AccountEntity> selectParentAccountList();

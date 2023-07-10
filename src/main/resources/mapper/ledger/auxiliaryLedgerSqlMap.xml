@@ -3,7 +3,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.seoulit.account.posting.ledger.mapper.AuxiliaryLedgerMapper">
-		
+
 		<resultMap id="cashJournalBeanResult" type="kr.co.seoulit.account.posting.ledger.to.CashJournalBean">
 			<result property="expenseReport" column="EXPENSE_REPORT" />
 			<result property="reportingDate" column="REPORTING_DATE" />
@@ -13,7 +13,7 @@
 			<result property="withdrawal" column="WITHDRAWAL" />
 			<result property="balance" column="BALANCE" />
 		</resultMap>
-		
+
 		<resultMap id="cashJournalBeanResult2" type="kr.co.seoulit.account.posting.ledger.to.CashJournalBean">
 			<result property="expenseReport" column="EXPENSE_REPORT" />
 			<result property="monthReportingDate" column="MONTH_REPORTING_DATE" />
@@ -21,7 +21,7 @@
 			<result property="withdrawal" column="WITHDRAWAL" />
 			<result property="balance" column="BALANCE" />
 		</resultMap>
-		
+
    <select id="selectTotalCashJournalList" parameterType="java.util.HashMap" resultMap="cashJournalBeanResult2">
 <![CDATA[
 SELECT LEV
@@ -93,37 +93,38 @@ GROUP BY LEV
 ORDER BY LEV
 , MONTH_REPORTING_DATE
 
-]]>	
+]]>
 </select>
 
+<!--	현금출남장 조회-->
    <select id="selectCashJournalList" parameterType="java.util.HashMap" resultMap="cashJournalBeanResult2">
 <![CDATA[
-SELECT 
-       CASE 
-           WHEN LEV IS NULL 
-           THEN '2' 
-           ELSE LEV 
+SELECT
+       CASE
+           WHEN LEV IS NULL
+           THEN '2'
+           ELSE LEV
        END AS LEV
      , MONTH_REPORTING_DATE
-     , CASE 
-           WHEN LEV = '1' 
-           THEN '[전 일 이 월]' 
-           WHEN REPORTING_DATE IS NULL 
-           THEN '[월 계]' 
-           ELSE REPORTING_DATE 
+     , CASE
+           WHEN LEV = '1'
+           THEN '[전 일 이 월]'
+           WHEN REPORTING_DATE IS NULL
+           THEN '[월 계]'
+           ELSE REPORTING_DATE
        END AS REPORTING_DATE
      , EXPENSE_REPORT
      , CUSTOMER_CODE
      , CUSTOMER_NAME
      , SUM(DEPOSIT) AS DEPOSIT
      , SUM(WITHDRAWAL) AS WITHDRAWAL
-     , CASE 
-           WHEN REPORTING_DATE IS NULL 
-           THEN SUM(DEPOSIT) - SUM(WITHDRAWAL) 
-           ELSE BALANCE 
+     , CASE
+           WHEN REPORTING_DATE IS NULL
+           THEN SUM(DEPOSIT) - SUM(WITHDRAWAL)
+           ELSE BALANCE
        END AS BALANCE
-     , SLIP_NO 
-  FROM 
+     , SLIP_NO
+  FROM
        (SELECT LEV
             , MONTH_REPORTING_DATE
             , REPORTING_DATE
@@ -132,15 +133,15 @@ SELECT
             , CUSTOMER_NAME
             , DEPOSIT
             , WITHDRAWAL
-            , CASE 
-                  WHEN LEV = '1' 
-                  THEN DEPOSIT - WITHDRAWAL 
-                  WHEN LEAD(REPORTING_DATE) OVER(ORDER BY REPORTING_DATE) = REPORTING_DATE 
-                  THEN NULL 
-                  ELSE SUM(DEPOSIT) OVER(ORDER BY LEV, MONTH_REPORTING_DATE, SLIP_NO ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) - SUM(WITHDRAWAL) OVER(ORDER BY LEV, MONTH_REPORTING_DATE, SLIP_NO ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+            , CASE
+                  WHEN LEV = '1'
+                  THEN DEPOSIT - WITHDRAWAL
+                  WHEN LEAD(REPORTING_DATE) OVER(ORDER BY REPORTING_DATE) = REPORTING_DATE
+                  THEN NULL
+                  ELSE SUM(DEPOSIT) OVER(ORDER BY LEV, MONTH_REPORTING_DATE, SLIP_NO ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) - SUM(WITHDRAWAL) OVER(ORDER BY LEV, MONTH_REPORTING_DATE, SLIP_NO ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
               END AS BALANCE
-            , SLIP_NO 
-         FROM 
+            , SLIP_NO
+         FROM
               (SELECT '2' AS LEV
                    , MONTH_REPORTING_DATE
                    , REPORTING_DATE REPORTING_DATE
@@ -149,8 +150,8 @@ SELECT
                    , CUSTOMER_NAME
                    , DEPOSIT AS DEPOSIT
                    , WITHDRAWAL AS WITHDRAWAL
-                   , SLIP_NO 
-                FROM 
+                   , SLIP_NO
+                FROM
                      (SELECT SUBSTR(S.REPORTING_DATE, 0, 7) AS MONTH_REPORTING_DATE
                           , S.REPORTING_DATE AS REPORTING_DATE
                           , S.EXPENSE_REPORT AS EXPENSE_REPORT
@@ -158,19 +159,19 @@ SELECT
                           , C.CUSTOMER_NAME AS CUSTOMER_NAME
                           , J.LEFT_DEBTOR_PRICE AS DEPOSIT
                           , J.RIGHT_CREDITS_PRICE AS WITHDRAWAL
-                          , S.SLIP_NO AS SLIP_NO 
+                          , S.SLIP_NO AS SLIP_NO
                        FROM ACCOUNT A
                           , SLIP S
                           , JOURNAL J
-                          , CUSTOMER C 
-                      WHERE S.SLIP_NO = J.SLIP_NO 
-                            AND J.ACCOUNT_INNER_CODE = A.ACCOUNT_INNER_CODE 
-                            AND J.CUSTOMER_CODE = C.CUSTOMER_CODE(+) 
+                          , CUSTOMER C
+                      WHERE S.SLIP_NO = J.SLIP_NO
+                            AND J.ACCOUNT_INNER_CODE = A.ACCOUNT_INNER_CODE
+                            AND J.CUSTOMER_CODE = C.CUSTOMER_CODE(+)
                             AND J.ACCOUNT_INNER_CODE = #{account}
-                            AND S.SLIP_STATUS = '승인완료' 
+                            AND S.SLIP_STATUS = '승인완료'
                             AND S.REPORTING_DATE BETWEEN #{fromDate} AND #{toDate}
-                     ) 
-                  UNION ALL 
+                     )
+                  UNION ALL
               SELECT '1' AS LEV
                    , NULL AS MONTH_REPORTING_DATE
                    , NULL AS REPORTING_DATE
@@ -179,20 +180,21 @@ SELECT
                    , NULL AS CUSTOMER_NAME
                    , SUM(J.LEFT_DEBTOR_PRICE) AS DEPOSIT
                    , SUM(J.RIGHT_CREDITS_PRICE) AS WITHDRAWAL
-                   , NULL AS SLIP_NO 
+                   , NULL AS SLIP_NO
                 FROM SLIP S
-                   , JOURNAL J 
-               WHERE S.SLIP_NO = J.SLIP_NO 
+                   , JOURNAL J
+
+               WHERE S.SLIP_NO = J.SLIP_NO
                      AND J.ACCOUNT_INNER_CODE = #{account}
-                     AND S.SLIP_STATUS = '승인완료' 
+                     AND S.SLIP_STATUS = '승인완료'
                      AND S.REPORTING_DATE < #{fromDate}
               )
-       ) 
- GROUP BY ROLLUP( MONTH_REPORTING_DATE, ( LEV, REPORTING_DATE, EXPENSE_REPORT, CUSTOMER_CODE, CUSTOMER_NAME, BALANCE, SLIP_NO ) ) 
-HAVING GROUPING(MONTH_REPORTING_DATE) < 1 
-       AND LEV IN( 1, 2 ) 
-       OR MONTH_REPORTING_DATE IS NOT NULL 
-    UNION ALL 
+       )
+ GROUP BY ROLLUP( MONTH_REPORTING_DATE, ( LEV, REPORTING_DATE, EXPENSE_REPORT, CUSTOMER_CODE, CUSTOMER_NAME, BALANCE, SLIP_NO ) )
+HAVING GROUPING(MONTH_REPORTING_DATE) < 1
+       AND LEV IN( 1, 2 )
+       OR MONTH_REPORTING_DATE IS NOT NULL
+    UNION ALL
 SELECT '3' AS LEV
      , '9999-12' AS MONTH_REPORTING_DATE
      , '[전 체 누 계]' AS REPORTING_DATE
@@ -202,17 +204,17 @@ SELECT '3' AS LEV
      , SUM(J.LEFT_DEBTOR_PRICE) AS DEPOSIT
      , SUM(J.RIGHT_CREDITS_PRICE) AS WITHDRAWAL
      , SUM(J.LEFT_DEBTOR_PRICE) - SUM(J.RIGHT_CREDITS_PRICE) AS BALANCE
-     , NULL AS SLIP_NO 
+     , NULL AS SLIP_NO
   FROM SLIP S
-     , JOURNAL J 
- WHERE S.SLIP_NO = J.SLIP_NO 
+     , JOURNAL J
+ WHERE S.SLIP_NO = J.SLIP_NO
        AND J.ACCOUNT_INNER_CODE = #{account}
-       AND S.SLIP_STATUS = '승인완료' 
-       AND S.REPORTING_DATE <= #{toDate} 
+       AND S.SLIP_STATUS = '승인완료'
+       AND S.REPORTING_DATE <= #{toDate}
 ORDER BY LEV
      , MONTH_REPORTING_DATE
      , SLIP_NO
 
-]]>	
+]]>
 </select>
 </mapper>

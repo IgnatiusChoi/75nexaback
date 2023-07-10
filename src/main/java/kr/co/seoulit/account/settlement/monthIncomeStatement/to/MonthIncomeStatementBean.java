@@ -5,6 +5,7 @@ import kr.co.seoulit.account.sys.common.annotation.Dataset;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -18,7 +19,7 @@ public class MonthIncomeStatementBean extends BaseBean {
     @Column(name = "YEAR")
     private String year;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "MONTH")
     private String month;
 
