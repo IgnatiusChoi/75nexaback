@@ -25,13 +25,13 @@ public class MonthIncomeStatementServiceImpl implements MonthIncomeStatementServ
         System.out.println("selectedDate : " + params);
         //ArrayList<MonthIncomeStatementBean> monthIncomeStatementList = monthIncomeStatementDAO.selectMonthIncomeStatement(map);
 
-        ArrayList<MonthIncomeStatementBean> monthIncomeStatementList = null;
-        monthIncomeStatementList = monthIncomeStatementDAO.selectMonthIncomeStatement(params);
+        HashMap<String, Object> map = monthIncomeStatementDAO.selectMonthIncomeStatement(params);
 
-        //monthIncomeStatementDAO.selectMonthIncomeStatement(params);
-        //return monthIncomeStatementList;
-        System.out.println("params11 : " + params);
-        //return null;
-        return monthIncomeStatementList;
+        ArrayList<MonthIncomeStatementBean> result = (ArrayList<MonthIncomeStatementBean>)params.get("RESULT");
+
+        System.out.println("result = " + result);
+        System.out.println("params = " + params);
+
+        return result;
     }
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 public interface CostStatementMapper {
 
     //원가명세서 조회
-    public ArrayList<CostStatementBean> selectCostStatement(HashMap<String,Object> params);
+    //public ArrayList<CostStatementBean> selectCostStatement(HashMap<String,Object> params);
+    public HashMap<String, Object> selectCostStatement(HashMap<String,Object> params);
 
 }

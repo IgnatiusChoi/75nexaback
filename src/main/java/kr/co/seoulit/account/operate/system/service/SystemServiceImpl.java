@@ -66,6 +66,7 @@ public class SystemServiceImpl implements SystemService {
 	//	return (ArrayList<AccountEntity>) accountRepository.findParentAccountList();
 	}
 
+	//상세 계정코드 가져오기
 	@Override
 	public ArrayList<AccountDetailEntity> findDetailAccountList(String parentAccountInnerCode) {
 

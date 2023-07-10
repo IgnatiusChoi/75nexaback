@@ -88,14 +88,17 @@ public class AccountSubjectController {
 
         return null;
     }
-  //  @GetMapping("/parentaccountlist")
+
+  //계정과목 가져오기
     @RequestMapping(value = "/findParentAccountList")
     public ArrayList<AccountEntity> findParentAccountList(@RequestAttribute("reqData")PlatformData reqData,
-            @RequestAttribute("resData")PlatformData resData) throws Exception {
+                                                          @RequestAttribute("resData")PlatformData resData) throws Exception {
         datasetBeanMapper.beansToDataset(resData, systemService.findParentAccountList(), AccountEntity.class);
+
         return null;
     }
-    //@GetMapping("/detailaccountlist")
+
+    //상세 계정코드 가져오기
     @RequestMapping(value = "/detailaccountlist")
     public ArrayList<AccountDetailEntity> findDetailAccountList(@RequestAttribute("reqData")PlatformData reqData,
                                                                 @RequestAttribute("resData")PlatformData resData) throws Exception {

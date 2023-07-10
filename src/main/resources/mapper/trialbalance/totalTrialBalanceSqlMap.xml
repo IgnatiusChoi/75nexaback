@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-        
+
 <mapper namespace="kr.co.seoulit.account.settlement.trialbalance.mapper.TotalTrialBalanceMapper">
 
-	
+
 <resultMap id="totalTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.TotalTrialBalanceBean">
 
 		<result property="lev" column="LEV"  />
@@ -22,7 +22,7 @@
 		<result property="incomeStatement" column="INCOME_STATEMENT"/>
 		<result property="financialPosition" column="FINANCIAL_POSITION"/>
 	</resultMap>
-		
+
 	<parameterMap id="totalTrialBalanceParams" type="java.util.HashMap">
 		<parameter property="accountPeriodNo" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
 		<parameter property="callResult" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
@@ -33,14 +33,14 @@
 		<parameter property="accountingSettlementStatus" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
 				   resultMap="accountingSettlementStatusResult"/>
 	</parameterMap>
-		
+
 	<select id="selectcallTotalTrialBalance" parameterMap="totalTrialBalanceParams" statementType="CALLABLE">
 			<![CDATA[
          {call P_TOTAL_TRIAL_BALANCE(?, ?, ?, ?, ?, ?)}
        ]]>
 	</select>
-		
-		
+
+
 	 <parameterMap id="earlyStatementsParams" type="java.util.HashMap">
 		<parameter property="accountPeriodNo" jdbcType="VARCHAR" javaType="String" mode="IN"/>
 		<parameter property="callResult" jdbcType="VARCHAR" javaType="String" mode="IN"/>
@@ -62,41 +62,142 @@
        ]]>
 	</select>
 
-	<parameterMap id="detailTrialBalanceParams" type="java.util.HashMap">
-		<parameter property="fromDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
-		<parameter property="toDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>
-		<parameter property="errorCode" jdbcType="DECIMAL" javaType="int" mode="OUT"/>
-		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="String" mode="OUT"/>
-		<parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"
-				   resultMap="detailTrialBalanceResult"/>
-	</parameterMap>
 
 
-	<resultMap id="detailTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.DetailTrialBalanceBean">
-		<result property="lev" column="LEV"/>
-		<result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>
-		<result property="debitsSum" column="DEBITS_SUM"/>
-		<result property="exceptCashDebits" column="EXCEPT_CASH_DEBITS"/>
-		<result property="cashDebits" column="CASH_DEBITS"/>
-		<result property="accountName" column="ACCOUNT_NAME"/>
-		<result property="creditsSumBalance" column="CREDITS_SUM_BALANCE"/>
-		<result property="debitsSumBalance" column="DEBITS_SUM_BALANCE"/>
-		<result property="cashCredits" column="CASH_CREDITS"/>
-		<result property="exceptCashCredits" column="EXCEPT_CASH_CREDITS"/>
-		<result property="creditsSum" column="CREDITS_SUM"/>
+
+<!--	<resultMap id="detailTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.DetailTrialBalanceBean">-->
+<!--		<result property="lev" column="LEV"/>-->
+<!--		<result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>-->
+<!--		<result property="debitsSum" column="DEBITS_SUM"/>-->
+<!--		<result property="exceptCashDebits" column="EXCEPT_CASH_DEBITS"/>-->
+<!--		<result property="cashDebits" column="CASH_DEBITS"/>-->
+<!--		<result property="accountName" column="ACCOUNT_NAME"/>-->
+<!--		<result property="creditsSumBalance" column="CREDITS_SUM_BALANCE"/>-->
+<!--		<result property="debitsSumBalance" column="DEBITS_SUM_BALANCE"/>-->
+<!--		<result property="cashCredits" column="CASH_CREDITS"/>-->
+<!--		<result property="exceptCashCredits" column="EXCEPT_CASH_CREDITS"/>-->
+<!--		<result property="creditsSum" column="CREDITS_SUM"/>-->
+<!--	</resultMap>-->
+
+	<resultMap id="detaillTrialBalanceResult" type="kr.co.seoulit.account.settlement.trialbalance.to.DetailTrialBalanceBean">
+		<result property="debitsSum" column="debitssum"/>
+		<result property="exceptCashDebits" column="exceptcashdebits"/>
+		<result property="cashDebits" column="cashdebits"/>
+		<result property="accountName" column="accountname"/>
+		<result property="cashCredits" column="cashcredits"/>
+		<result property="exceptCashCredits" column="exceptcashcredits"/>
+		<result property="creditsSum" column="creditssum"/>
 	</resultMap>
 
 
+<!--	<parameterMap id="detailTrialBalanceParams" type="java.util.HashMap">-->
+<!--		<parameter property="fromDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>-->
+<!--		<parameter property="toDate" jdbcType="VARCHAR" javaType="String" mode="IN"/>-->
+<!--		<parameter property="errorCode" jdbcType="DECIMAL" javaType="int" mode="OUT"/>-->
+<!--		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="String" mode="OUT"/>-->
+<!--		<parameter property="RESULT" jdbcType="CURSOR" javaType="java.sql.ResultSet" mode="OUT"-->
+<!--				   resultMap="detailTrialBalanceResult"/>-->
+<!--	</parameterMap>-->
 
 
-	<select id="selectDetailTrialBalance" parameterMap="detailTrialBalanceParams" statementType="CALLABLE">
-
+<!--	일(월)계표 조회-->
+<!--	<select id="selectDetailTrialBalance" parameterMap="detailTrialBalanceParams" statementType="CALLABLE">-->
+<!--		<![CDATA[-->
+<!--		{call P_DETAIL_TRIAL_BALANCE(?, ?, ?, ?, ?)}-->
+<!--		]]>-->
+	<select id="selectDetailTrialBalance" parameterType="Map" resultMap="detaillTrialBalanceResult">
 		<![CDATA[
-		{call P_DETAIL_TRIAL_BALANCE(?, ?, ?, ?, ?)}
-		]]>
+        SELECT debitssum,
+               exceptcashdebits,
+               cashdebits,
+               LPAD(' ', ( LEV - 1 ) * 4) || NVL(A1.ACCOUNT_NAME, '합계') AS accountname,
+               cashcredits,
+               exceptcashcredits,
+               creditssum
+        FROM   ACCOUNT A1,
+               (SELECT
+                    CASE
+                        WHEN ACCOUNT_CODE IS NOT NULL THEN 3
+                        WHEN APPEND_CODE IS NOT NULL THEN 2
+                        WHEN PARENT_CODE IS NOT NULL THEN 1
+                        END AS lev,
 
+                    CASE
+                        WHEN ACCOUNT_CODE IS NOT NULL THEN ACCOUNT_CODE
+                        WHEN APPEND_CODE IS NOT NULL THEN APPEND_CODE
+                        WHEN PARENT_CODE IS NOT NULL THEN PARENT_CODE
+                        END AS accountinnercode,
 
-</select>
+                    PARENT_CODE,
+                    APPEND_CODE,
+                    ACCOUNT_CODE,
+                    SUM(DEBITS_SUM)           AS debitssum,
+                    SUM(EXCEPT_CASH_DEBITS)   AS exceptcashdebits,
+                    SUM(CASH_DEBITS)          AS cashdebits,
+                    SUM(CASH_CREDITS)         AS cashcredits,
+                    SUM(EXCEPT_CASH_CREDITS)  AS exceptcashcredits,
+                    SUM(CREDITS_SUM)          AS creditssum
+                FROM   (SELECT
+                            A1.ACCOUNT_INNER_CODE AS PARENT_CODE,
+                            A2.ACCOUNT_INNER_CODE AS APPEND_CODE,
+                            A3.ACCOUNT_CODE       AS ACCOUNT_CODE,
+                            J1.DEBITS             AS DEBITS_SUM,
+
+                            CASE
+                                WHEN J1.DEBITS = 0
+                                    THEN 0
+                                ELSE J1.DEBITS - J2.CASH_DEBITS
+                                END                   AS EXCEPT_CASH_DEBITS,
+
+                            CASE
+                                WHEN J1.DEBITS = 0
+                                    THEN 0
+                                ELSE J2.CASH_DEBITS
+                                END                   AS CASH_DEBITS,
+
+                            CASE
+                                WHEN J1.CREDITS = 0
+                                    THEN 0
+                                ELSE J2.CASH_CREDITS
+                                END                   AS CASH_CREDITS,
+
+                            CASE
+                                WHEN J1.CREDITS = 0
+                                    THEN 0
+                                ELSE J1.CREDITS - J2.CASH_CREDITS
+                                END                   AS EXCEPT_CASH_CREDITS,
+
+                            J1.CREDITS            AS CREDITS_SUM
+                        FROM   ACCOUNT A1,
+                               ACCOUNT A2,
+                               ACCOUNT A3,
+                               (SELECT J.SLIP_NO             AS SLIP_NO,
+                                       J.ACCOUNT_INNER_CODE  AS ACCOUNT_CODE,
+                                       J.LEFT_DEBTOR_PRICE   AS DEBITS,
+                                       J.RIGHT_CREDITS_PRICE AS CREDITS
+                                FROM   JOURNAL J,
+                                       ACCOUNT A,
+                                       SLIP S
+                                WHERE  J.SLIP_NO = S.SLIP_NO
+                                  AND J.ACCOUNT_INNER_CODE = A.ACCOUNT_INNER_CODE
+                                  AND S.SLIP_STATUS = '승인완료'
+                                  AND S.REPORTING_DATE BETWEEN #{fromDate} AND #{toDate}
+                                  AND J.ACCOUNT_INNER_CODE != '0101') J1,
+                               (SELECT SLIP_NO,
+                                       LEFT_DEBTOR_PRICE   AS CASH_CREDITS,
+                                       RIGHT_CREDITS_PRICE AS CASH_DEBITS
+                                FROM   JOURNAL
+                                WHERE  ACCOUNT_INNER_CODE = '0101') J2
+                        WHERE  J1.SLIP_NO = J2.SLIP_NO
+                          AND J1.ACCOUNT_CODE = A3.ACCOUNT_INNER_CODE
+                          AND A3.PARENT_ACCOUNT_INNER_CODE = A2.ACCOUNT_INNER_CODE(+)
+                          AND A2.PARENT_ACCOUNT_INNER_CODE = A1.ACCOUNT_INNER_CODE(+)
+                       )
+                GROUP  BY ROLLUP ( PARENT_CODE, APPEND_CODE, ACCOUNT_CODE )) A2
+        WHERE  A1.ACCOUNT_INNER_CODE(+) = A2.accountinnercode
+        ORDER  BY SUBSTR(accountinnercode, 1, 4),
+                  SUBSTR(accountinnercode, 6) DESC NULLS LAST
+        ]]>
+	</select>
 
 </mapper>
-		 

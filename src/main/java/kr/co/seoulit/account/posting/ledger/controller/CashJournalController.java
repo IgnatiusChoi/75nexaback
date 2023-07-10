@@ -35,20 +35,22 @@ public class CashJournalController {
     private LedgerService ledgerService;
 	@Autowired
     private DatasetBeanMapper datasetBeanMapper;
-    
-    
+
+
     ModelAndView mav = null;
     ModelMap map = new ModelMap();
 
+    //현금출납장 조회
     @RequestMapping("/cashjournal")
     public ArrayList<CashJournalBean> handleRequestInternal(@RequestAttribute("reqData") PlatformData reqData,
-            @RequestAttribute("resData") PlatformData resData) throws Exception{
+                                                            @RequestAttribute("resData") PlatformData resData) throws Exception{
     	String account="0101";
     	String fromDate=reqData.getVariable("startDate").getString();
     	String toDate=reqData.getVariable("endDate").getString();
     	System.out.println(account+"@@@@@@@@@@@@@@@@@@");
     	System.out.println(fromDate+"@@@@@@@@@@@@@@@@@@");
     	System.out.println(toDate+"@@@@@@@@@@@@@@@@@@");
+
         ArrayList<CashJournalBean> cashJournalList = ledgerService.findCashJournal(fromDate, toDate, account);
         datasetBeanMapper.beansToDataset(resData, cashJournalList, CashJournalBean.class);
         return null;

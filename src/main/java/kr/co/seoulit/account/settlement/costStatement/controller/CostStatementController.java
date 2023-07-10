@@ -18,12 +18,11 @@ public class CostStatementController {
 
     @Autowired
     private CostStatementService costStatementService;
-
     @Autowired
     private DatasetBeanMapper datasetBeanMapper;
 
     //원가명세서 조회
-    @RequestMapping(value = "/costStatement")
+    @RequestMapping(value = "/selectedDate")
     public ArrayList<CostStatementBean> findCostStatement(@RequestAttribute("reqData") PlatformData reqData,
                                                           @RequestAttribute("resData")PlatformData resData) throws Exception {
         System.out.println("원가명세서_Controller");

@@ -17,14 +17,29 @@ public class CostStatementServiceImpl implements CostStatementService{
     private CostStatementMapper costStatementDAO;
 
     //원가명세서 조회
+//    @Override
+//    public ArrayList<CostStatementBean> findCostStatement(HashMap<String,Object> params) {
+//
+//        System.out.println("원가명세서_ServiceImpl");
+//        System.out.println("selectedDate : " + params);
+//
+//        costStatementDAO.selectCostStatement(params);
+//        System.out.println("params1 : " + params);
+//        return null;
+//    }
+
     @Override
     public ArrayList<CostStatementBean> findCostStatement(HashMap<String,Object> params) {
 
         System.out.println("원가명세서_ServiceImpl");
         System.out.println("selectedDate : " + params);
 
-        costStatementDAO.selectCostStatement(params);
+        HashMap<String, Object> map = costStatementDAO.selectCostStatement(params);
+        ArrayList<CostStatementBean> result = (ArrayList<CostStatementBean>)params.get("RESULT");
+
+        System.out.println("result : " + result);
         System.out.println("params1 : " + params);
-        return null;
+
+        return result;
     }
 }
