@@ -44,7 +44,7 @@ public class CashJournalController {
     @RequestMapping("/cashjournal")
     public ArrayList<CashJournalBean> handleRequestInternal(@RequestAttribute("reqData") PlatformData reqData,
                                                             @RequestAttribute("resData") PlatformData resData) throws Exception{
-    	String account="0101";
+    	String account=reqData.getVariable("account").getString();
     	String fromDate=reqData.getVariable("startDate").getString();
     	String toDate=reqData.getVariable("endDate").getString();
     	System.out.println(account+"@@@@@@@@@@@@@@@@@@");
