@@ -103,6 +103,7 @@ public class AccountSubjectController {
     public ArrayList<AccountDetailEntity> findDetailAccountList(@RequestAttribute("reqData")PlatformData reqData,
                                                                 @RequestAttribute("resData")PlatformData resData) throws Exception {
         String parentAccountInnerCode = reqData.getVariable("parentAccountInnerCode").getString();
+        System.out.println(parentAccountInnerCode);
 
             ArrayList<AccountDetailEntity> accountList = systemService.findDetailAccountList(parentAccountInnerCode);
             datasetBeanMapper.beansToDataset(resData, accountList, AccountDetailEntity.class);

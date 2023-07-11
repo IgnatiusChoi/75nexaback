@@ -85,12 +85,11 @@
 <!--	상세 계정코드 가져오기-->
 	<select id="selectDetailAccountList" parameterType="String" resultType="kr.co.seoulit.account.operate.system.to.AccountDetailEntity">
 		<![CDATA[
-		SELECT b.ACCOUNT_INNER_CODE			AS accountInnerCode,
-			   b.ACCOUNT_NAME				AS accountName,
-			   b.PARENT_ACCOUNT_INNER_CODE	AS parentAccountInnercode,
-			   b.group_code					AS groupCode,
-			   b.ACCOUNT_CODE				AS accountCode,
-			   a.ACCOUNT_NAME				AS accountName
+		SELECT b.ACCOUNT_INNER_CODE			AS ACCOUNT_INNER_CODE,
+			   b.ACCOUNT_NAME				AS ACCOUNT_NAME,
+			   b.PARENT_ACCOUNT_INNER_CODE	AS PARENT_ACCOUNT_INNER_CODE,
+			   b.group_code					AS GROUP_CODE,
+			   b.ACCOUNT_CODE				AS ACCOUNT_CODE
 		FROM ACCOUNT a,
 			 ACCOUNT b
 		WHERE b.ACCOUNT_INNER_CODE NOT LIKE '%-%'

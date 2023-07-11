@@ -22,24 +22,10 @@ public class AccountDetailEntity extends BaseBean {
     private String parentAccountInnerCode;
     @Column(name = "ACCOUNT_CODE")
     private String accountCode;
-    @Column(name = "ACCOUNT_CHARACTER", columnDefinition = "nvarchar2")
-    private String accountCharacter;
+    @Column(name="GROUP_CODE")
+    private String groupCode;
     @Column(name = "ACCOUNT_NAME", columnDefinition = "nvarchar2")
     private String accountName;
-    @Column(name = "ACCOUNT_USE_CHECK", columnDefinition = "char")
-    private String accountUseCheck;
-    @Column(name = "ACCOUNT_DESCRIPTION", columnDefinition = "nvarchar2")
-    private String accountDescription;
-    @Column(name = "EDITABLE", columnDefinition = "number")
-    private String editable;
-    @Column(name = "BUDGET", columnDefinition = "char")
-    private String budget;
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "accountCodeId")
-//    private List<AccountControlEntity> accountControlList;
-    @Transient
-    private String editform;
-    @Transient
-	private String lev;
+
 
 }
