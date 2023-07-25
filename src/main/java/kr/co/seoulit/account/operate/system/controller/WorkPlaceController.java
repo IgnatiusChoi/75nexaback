@@ -28,88 +28,91 @@ import net.sf.json.JSONArray;
 public class WorkPlaceController {
 
     @Autowired
-	private SystemService systemService;
+    private SystemService systemService;
     @Autowired
-	private DatasetBeanMapper datasetBeanMapper;
+    private DatasetBeanMapper datasetBeanMapper;
 
 
-	 ModelAndView mav;
-	 ModelMap map = new ModelMap();
+    ModelAndView mav;
+    ModelMap map = new ModelMap();
 
-	// 업태리스트조회
-	@GetMapping("/businesslist")
-	public ArrayList<BusinessBean> findBusinessList() {
+    // 업태리스트조회
+    @GetMapping("/businesslist")
+    public ArrayList<BusinessBean> findBusinessList() {
 
-			ArrayList<BusinessBean>	businessList = systemService.findBusinessList();
+        ArrayList<BusinessBean> businessList = systemService.findBusinessList();
 
-		return businessList;
+        return businessList;
 
-	}
+    }
 
-	@GetMapping("/detailbusiness")
-	public ArrayList<DetailBusinessBean> findDetailBusiness(@RequestParam String businessCode) {
+    @GetMapping("/detailbusiness")
+    public ArrayList<DetailBusinessBean> findDetailBusiness(@RequestParam String businessCode) {
 
-			ArrayList<DetailBusinessBean> detailBusinessList = systemService.findDetailBusiness(businessCode);
+        ArrayList<DetailBusinessBean> detailBusinessList = systemService.findDetailBusiness(businessCode);
 
-	            return detailBusinessList;
+        return detailBusinessList;
 
 
-	}
+    }
 
-	@RequestMapping("/registerworkplace")
-	public void registerworkPlace(@RequestAttribute("reqData")PlatformData reqData,
-            @RequestAttribute("resData")PlatformData resData) throws Exception {
-		WorkplaceEntity obj = datasetBeanMapper.datasetToBean(reqData, WorkplaceEntity.class);
-//         JSONObject workplaceAddItemsAll = JSONObject.fromObject(workplaceAddItems);
-//         WorkplaceEntity workplaceEntity = BeanCreator.getInstance().create(workplaceAddItemsAll, WorkplaceEntity.class);
-		 systemService.registerWorkplace(obj);
- //        systemService.registerWorkplace(workplaceEntity); //insert
+    @RequestMapping("/registerworkplace")
+    public void registerworkPlace(@RequestAttribute("reqData") PlatformData reqData,
+                                  @RequestAttribute("resData") PlatformData resData) throws Exception {
+        WorkplaceEntity obj = datasetBeanMapper.datasetToBean(reqData, WorkplaceEntity.class);
+        systemService.registerWorkplace(obj);
+//        JSONObject workplaceAddItemsAll = JSONObject.fromObject(workplaceAddItems);
+//        WorkplaceEntity workplaceEntity = BeanCreator.getInstance().create(workplaceAddItemsAll, WorkplaceEntity.class);
+//        systemService.registerWorkplace(workplaceEntity); //insert
 
- }
-	@RequestMapping("/removeWorkplace")
-    public void removeWorkplace(@RequestAttribute("reqData")PlatformData reqData,
-            @RequestAttribute("resData")PlatformData resData) throws Exception {
+    }
+
+    @RequestMapping("/removeWorkplace")
+    public void removeWorkplace(@RequestAttribute("reqData") PlatformData reqData,
+                                @RequestAttribute("resData") PlatformData resData) throws Exception {
 
         String workplaceCode = reqData.getVariable("workplaceCode").getString();
 
 
-			systemService.removeWorkplace(workplaceCode); //delete
+        systemService.removeWorkplace(workplaceCode); //delete
 
- }
+    }
+
     @PostMapping("/workplace")
-	public WorkplaceEntity findWorkplace(@RequestParam String workplaceCode) {
+    public WorkplaceEntity findWorkplace(@RequestParam String workplaceCode) {
 
-     WorkplaceEntity  workplaceEntity = new WorkplaceEntity();
+        WorkplaceEntity workplaceEntity = new WorkplaceEntity();
 
-     workplaceEntity = systemService.findWorkplace(workplaceCode);
+        workplaceEntity = systemService.findWorkplace(workplaceCode);
 
-     return workplaceEntity;
- }
+        return workplaceEntity;
+    }
 
-	@RequestMapping("/allworkplacelist")
-	public void findAllWorkplaceList(@RequestAttribute("reqData")PlatformData reqData,
-            @RequestAttribute("resData")PlatformData resData) throws Exception {
-		System.out.println("@@@@CustomerController@@@@");
-		 ArrayList<WorkplaceEntity> allWorkplaceList = systemService.findAllWorkplaceList();
+    @RequestMapping("/allworkplacelist")
+    public void findAllWorkplaceList(@RequestAttribute("reqData") PlatformData reqData,
+                                     @RequestAttribute("resData") PlatformData resData) throws Exception {
+        System.out.println("@@@@WorkplaceController@@@@");
+        ArrayList<WorkplaceEntity> allWorkplaceList = systemService.findAllWorkplaceList();
+        System.out.println("workplaceList = " + allWorkplaceList);
         datasetBeanMapper.beansToDataset(resData, allWorkplaceList, WorkplaceEntity.class);
 
 
-	}
+    }
 
-	@GetMapping("/approvalstatusmodification")
-	public void modifyApprovalStatus(@RequestParam String status,
-											 @RequestParam String codes	) {
+    @GetMapping("/approvalstatusmodification")
+    public void modifyApprovalStatus(@RequestParam String status,
+                                     @RequestParam String codes) {
 
-		ArrayList<String> getCodes=new ArrayList<>();
+        ArrayList<String> getCodes = new ArrayList<>();
 
-			JSONArray jsonArray=JSONArray.fromObject(codes);
-			for(Object obj :jsonArray) {
-				String code=(String)obj;
-				getCodes.add(code);
-			}
+        JSONArray jsonArray = JSONArray.fromObject(codes);
+        for (Object obj : jsonArray) {
+            String code = (String) obj;
+            getCodes.add(code);
+        }
 
-			systemService.modifyApprovalStatus(getCodes,status);
+        systemService.modifyApprovalStatus(getCodes, status);
 
-	}
+    }
 
 }

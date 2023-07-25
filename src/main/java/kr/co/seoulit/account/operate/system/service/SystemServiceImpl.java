@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kr.co.seoulit.account.operate.system.to.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.seoulit.account.sys.common.exception.DataAccessException;
 import kr.co.seoulit.account.operate.system.mapper.AccountSubjectMapper;
 import kr.co.seoulit.account.operate.system.mapper.AuthorityGroupMapper;
 import kr.co.seoulit.account.operate.system.mapper.BoardMapper;
-import kr.co.seoulit.account.operate.system.mapper.CustomerMapper;
+import kr.co.seoulit.account.operate.system.mapper.WorkplaceMapper;
 import kr.co.seoulit.account.operate.system.repository.AccountControlRepository;
 import kr.co.seoulit.account.operate.system.repository.AccountRepository;
 //import kr.co.seoulit.account.operate.system.repository.WorkplaceRepository;
@@ -24,18 +22,18 @@ public class SystemServiceImpl implements SystemService {
 
 	private final AccountSubjectMapper accountDAO;
 	private final AuthorityGroupMapper authorityGroupDAO;
-	private final CustomerMapper customerDAO;
+	private final WorkplaceMapper workplaceDAO;
 	private final AccountControlRepository accountControlRepository;
 	private final AccountRepository accountRepository;
 	private final BoardMapper BoardDAO;
 	//private final WorkplaceRepository workplaceRepository;
 
 	public SystemServiceImpl(AccountSubjectMapper accountDAO, AuthorityGroupMapper authorityGroupDAO,
-			CustomerMapper customerDAO, AccountControlRepository accountControlRepository,
-			AccountRepository accountRepository,BoardMapper BoardDAO) {
+							 WorkplaceMapper workplaceDAO, AccountControlRepository accountControlRepository,
+							 AccountRepository accountRepository, BoardMapper BoardDAO) {
 		this.accountDAO = accountDAO;
 		this.authorityGroupDAO = authorityGroupDAO;
-		this.customerDAO = customerDAO;
+		this.workplaceDAO = workplaceDAO;
 		this.accountControlRepository = accountControlRepository;
 		this.accountRepository = accountRepository;
 		this.BoardDAO=BoardDAO;
@@ -230,13 +228,13 @@ public class SystemServiceImpl implements SystemService {
 		//if (workplaceCodeCheck == null) {
 		//	System.out.println("workplaceBean : " + workplaceEntity);
 		//}
-	customerDAO.insertWorkplace(workplaceEntity);
+	workplaceDAO.insertWorkplace(workplaceEntity);
 	}
 
 	@Override
 	public void removeWorkplace(String workplaceCode) {
 
-			customerDAO.deleteWorkplace(workplaceCode);
+			workplaceDAO.deleteWorkplace(workplaceCode);
 			System.out.println("사업장삭제완료:" + workplaceCode);
 		}
 
@@ -245,7 +243,7 @@ public class SystemServiceImpl implements SystemService {
 	public void modifyApprovalStatus(ArrayList<String> getCodes, String status) {
 
 		for (String code : getCodes) {
-			customerDAO.updateWorkplaceAccount(code, status);
+			workplaceDAO.updateWorkplaceAccount(code, status);
 
 		}
 	}
@@ -254,7 +252,7 @@ public class SystemServiceImpl implements SystemService {
 	public WorkplaceEntity findWorkplace(String workplaceCode) {
 
 		WorkplaceEntity workplaceEntity = null;
-		workplaceEntity = customerDAO.selectWorkplace(workplaceCode);
+		workplaceEntity = workplaceDAO.selectWorkplace(workplaceCode);
 
 		return workplaceEntity;
 	}
@@ -263,7 +261,7 @@ public class SystemServiceImpl implements SystemService {
 	public ArrayList<WorkplaceEntity> findAllWorkplaceList() {
 
 		System.out.println("@@@@SystemServiceImpl@@@@");
-		ArrayList<WorkplaceEntity> allworkplaceList = customerDAO.selectAllWorkplaceList();
+		ArrayList<WorkplaceEntity> allworkplaceList = workplaceDAO.selectAllWorkplaceList();
 
 		return allworkplaceList;
 		//return ( ArrayList<WorkplaceEntity>) workplaceRepository.findAll();
@@ -273,7 +271,7 @@ public class SystemServiceImpl implements SystemService {
 	public ArrayList<BusinessBean> findBusinessList() {
 
 		ArrayList<BusinessBean> businessList = null;
-		businessList = customerDAO.selectBusinessList();
+		businessList = workplaceDAO.selectBusinessList();
 
 		return businessList;
 	}
@@ -282,7 +280,7 @@ public class SystemServiceImpl implements SystemService {
 	public ArrayList<DetailBusinessBean> findDetailBusiness(String businessCode) {
 
 		ArrayList<DetailBusinessBean> detailBusinessList = null;
-		detailBusinessList = customerDAO.selectDetailBusinessList(businessCode);
+		detailBusinessList = workplaceDAO.selectDetailBusinessList(businessCode);
 
 		return detailBusinessList;
 	}
