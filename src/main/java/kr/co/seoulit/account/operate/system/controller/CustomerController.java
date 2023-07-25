@@ -24,78 +24,48 @@ public class CustomerController {
     ModelAndView mav;
     ModelMap map = new ModelMap();
 
-//	// 업태리스트조회
-//	@GetMapping("/businesslist")
-//	public ArrayList<BusinessBean> findBusinessList() {
-//
-//			ArrayList<BusinessBean>	businessList = systemService.findBusinessList();
-//
-//		return businessList;
-//
-//	}
-//
-//	@GetMapping("/detailbusiness")
-//	public ArrayList<DetailBusinessBean> findDetailBusiness(@RequestParam String businessCode) {
-//
-//			ArrayList<DetailBusinessBean> detailBusinessList = systemService.findDetailBusiness(businessCode);
-//
-//	            return detailBusinessList;
-//
-//
-//	}
+    /*@RequestMapping("/registerCustomer")
+    public void registerCustomer(@RequestAttribute("reqData")PlatformData reqData,
+                                 @RequestAttribute("resData")PlatformData resData) throws Exception {
+        System.out.println("reqData = " + reqData.toString());
+//      CustomerUpdateRequest customerUpdateRequest = datasetBeanMapper.datasetToBean(reqData, CustomerUpdateRequest.class);
+        List<CustomerUpdateRequest> customerUpdateRequests = datasetBeanMapper.datasetToBeans(reqData, CustomerUpdateRequest.class);
+        customerService.registerCustomers(customerUpdateRequests);
+    }*/
 
     @RequestMapping("/registerCustomer")
     public void registerCustomer(@RequestAttribute("reqData")PlatformData reqData,
                                  @RequestAttribute("resData")PlatformData resData) throws Exception {
-        System.out.println("reqData = " + reqData.toString());
-//		CustomerUpdateRequest customerUpdateRequest = datasetBeanMapper.datasetToBean(reqData, CustomerUpdateRequest.class);
-        List<CustomerUpdateRequest> customerUpdateRequests = datasetBeanMapper.datasetToBeans(reqData, CustomerUpdateRequest.class);
-        customerService.registerCustomers(customerUpdateRequests);
+        CustomerUpdateRequest customerUpdateRequest = datasetBeanMapper.datasetToBean(reqData, CustomerUpdateRequest.class);
+        customerService.registerCustomer(customerUpdateRequest);
     }
 
-//	@RequestMapping("/removeWorkplace")
-//    public void removeWorkplace(@RequestAttribute("reqData")PlatformData reqData,
-//            @RequestAttribute("resData")PlatformData resData) throws Exception {
-//
-//        String workplaceCode = reqData.getVariable("workplaceCode").getString();
-//
-//
-//			systemService.removeWorkplace(workplaceCode); //delete
-//
-// }
-//    @PostMapping("/workplace")
-//	public WorkplaceEntity findWorkplace(@RequestParam String workplaceCode) {
-//
-//     WorkplaceEntity  workplaceEntity = new WorkplaceEntity();
-//
-//     workplaceEntity = systemService.findWorkplace(workplaceCode);
-//
-//     return workplaceEntity;
-// }
+    @RequestMapping("/updateCustomer")
+    public void updateCustomer(@RequestAttribute("reqData")PlatformData reqData,
+                               @RequestAttribute("resData")PlatformData resData) throws Exception {
+        CustomerUpdateRequest customerUpdateRequest = datasetBeanMapper.datasetToBean(reqData, CustomerUpdateRequest.class);
+        customerService.updateCustomer(customerUpdateRequest);
+
+    }
+
+    @RequestMapping("/removeCustomer")
+    public void removeCustomer(@RequestAttribute("reqData") PlatformData reqData,
+                               @RequestAttribute("resData") PlatformData resData) throws Exception {
+
+        String customerCode = reqData.getVariable("customerCode").getString();
+
+        customerService.removeCustomer(customerCode);
+    }
+
 
     @RequestMapping("/customerList")
-    public void findAllCustomerList(@RequestAttribute("reqData")PlatformData reqData,
-                                    @RequestAttribute("resData")PlatformData resData) throws Exception {
+    public void findAllCustomerList(@RequestAttribute("reqData") PlatformData reqData,
+                                    @RequestAttribute("resData") PlatformData resData) throws Exception {
         System.out.println("@@@@customerList@@@@");
         List<Customer> customerList = customerService.findCustomerList();
         System.out.println("customerList = " + customerList);
         datasetBeanMapper.beansToDataset(resData, customerList, Customer.class);
     }
-//
-//	@GetMapping("/approvalstatusmodification")
-//	public void modifyApprovalStatus(@RequestParam String status,
-//											 @RequestParam String codes	) {
-//
-//		ArrayList<String> getCodes=new ArrayList<>();
-//
-//			JSONArray jsonArray=JSONArray.fromObject(codes);
-//			for(Object obj :jsonArray) {
-//				String code=(String)obj;
-//				getCodes.add(code);
-//			}
-//
-//			systemService.modifyApprovalStatus(getCodes,status);
-//
-//	}
+
 
 }

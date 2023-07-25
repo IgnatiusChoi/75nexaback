@@ -12,5 +12,9 @@ public interface CustomerService {
 
     public void registerCustomer(CustomerUpdateRequest customerUpdateRequest);
 
-    public void registerCustomers(List<CustomerUpdateRequest> customerUpdateRequestList);
+    public void updateCustomer(CustomerUpdateRequest customerUpdateRequest);
+
+//  public void registerCustomers(List<CustomerUpdateRequest> customerUpdateRequestList);
+
+    public void removeCustomer(String customerCode);
 }
