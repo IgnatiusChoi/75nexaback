@@ -3,6 +3,7 @@ package kr.co.seoulit.account.posting.business.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import kr.co.seoulit.account.posting.business.DTO.JournalDto;
 import kr.co.seoulit.account.posting.business.service.BusinessService;
 import kr.co.seoulit.account.posting.business.to.JournalEntity;
 import kr.co.seoulit.account.sys.common.mapper.DatasetBeanMapper;
@@ -44,14 +45,13 @@ public class JournalController {
     }
 
     @RequestMapping(value = "/findRangedJournalList")
-    public ArrayList<JournalEntity> findRangedJournalList(@RequestAttribute("reqData") PlatformData reqData,
+    public void findRangedJournalList(@RequestAttribute("reqData") PlatformData reqData,
                                                           @RequestAttribute("resData")PlatformData resData) throws Exception {
         String fromDate = reqData.getVariable("startDate").getString();
         String toDate = reqData.getVariable("endDate").getString();
 
-        ArrayList<JournalEntity> journalList = businessService.findRangedJournalList(fromDate,toDate);
-        datasetBeanMapper.beansToDataset(resData, journalList, JournalEntity.class);
-        return null;
+        ArrayList<JournalDto> journalList = businessService.findRangedJournalList(fromDate,toDate);
+        datasetBeanMapper.beansToDataset(resData, journalList, JournalDto.class);
     }
 
     @GetMapping("/journalremoval")

@@ -1,4 +1,3 @@
-/*
 package kr.co.seoulit.account.operate.system.MapStruct;
 
 import kr.co.seoulit.account.operate.system.entity.Customer;
@@ -13,4 +12,3 @@ public interface CustomerMapper {
 
     CustomerUpdateRequest toCustomerDTO(Customer customer);
 }
-*/

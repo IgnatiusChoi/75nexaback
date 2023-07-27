@@ -2,7 +2,12 @@ package kr.co.seoulit.account.posting.business.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import kr.co.seoulit.account.posting.business.DTO.JournalDto;
+import kr.co.seoulit.account.posting.business.DTO.SlipDto;
+import kr.co.seoulit.account.posting.business.mapstruct.JournalMapstruct;
+import kr.co.seoulit.account.posting.business.mapstruct.SlipMapstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,9 @@ public class BusinessServiceImpl implements BusinessService {
     private final SlipApprovalAndReturnMapper slipApprovalAndReturnDAO;
     private final JournalDetailRepository journalDetailRepository;
     private final SlipRepository slipRepository;
+    private final SlipMapstruct slipmapstruct;
+
+    private final JournalMapstruct journalmapstruct;
 
 
     public void addSlip(SlipEntity slipObj, ArrayList<JournalEntity> journalBeans, ArrayList<JournalDetailEntity> journalDetail) {
@@ -116,11 +124,12 @@ public class BusinessServiceImpl implements BusinessService {
         return journalList;
     }
     @Override
-    public ArrayList<JournalEntity> findRangedJournalList(String fromDate, String toDate) {
+    public ArrayList<JournalDto> findRangedJournalList(String fromDate, String toDate) {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("fromDate", fromDate);
         map.put("toDate", toDate);
-        ArrayList<JournalEntity> journalList = journalDAO.selectRangedJournalList(map);
+        List<JournalEntity> journalentitylist = journalDAO.selectRangedJournalList(map);
+        ArrayList<JournalDto> journalList = (ArrayList<JournalDto>) journalmapstruct.toDto(journalentitylist);
 
         return journalList;
     }
@@ -156,9 +165,9 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public void registerSlip(SlipEntity slipEntity, ArrayList<JournalEntity> journalEntities) {
+    public void registerSlip(SlipDto slipDto, ArrayList<JournalDto> journalEntities) {
         System.out.println("AppServiceImpl_addSlip 시작");
-
+        SlipEntity slipEntity = slipmapstruct.toEntity(slipDto);
         StringBuffer slipNo = new StringBuffer();
         int sum = 0;
 
@@ -172,7 +181,8 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println("slipNo: "+slipNo.toString());
         slipEntity.setSlipNo(slipNo.toString()); //20200118SLIP00001
         slipDAO.insertSlip(slipEntity);
-        for (JournalEntity journalEntity : journalEntities) {
+        for (JournalDto journalDto : journalEntities) {
+            JournalEntity journalEntity = journalmapstruct.toEntity(journalDto);
             String journalNo = journalDAO.selectJournalName(slipEntity.getSlipNo());
             journalEntity.setJournalNo(journalNo);
             journalDAO.insertJournal(journalEntity);
@@ -201,9 +211,11 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public String modifySlip(SlipEntity slipEntity, ArrayList<JournalEntity> journalEntities) {
+    public String modifySlip(SlipDto slipdtos, ArrayList<JournalDto> journaldtos) {
+        SlipEntity slipEntity = slipmapstruct.toEntity(slipdtos);
         slipRepository.mergeSlip(slipEntity);
-        for (JournalEntity journalEntity : journalEntities) {
+        for (JournalDto journalDto : journaldtos) {
+            JournalEntity journalEntity = journalmapstruct.toEntity(journalDto);
             journalDAO.updateJournal(journalEntity);
             if(journalEntity.getJournalDetailList()!=null) {
                 for(JournalDetailEntity journalDetailEntity : journalEntity.getJournalDetailList()) {
@@ -224,9 +236,10 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public ArrayList<SlipEntity> findRangedSlipList(HashMap<String, Object> params) {
-
-        return slipDAO.selectRangedSlipList(params);
+    public ArrayList<SlipDto> findRangedSlipList(HashMap<String, Object> params) {
+        List<SlipEntity> slipEntityList = slipDAO.selectRangedSlipList(params);
+        ArrayList<SlipDto> slipList = (ArrayList<SlipDto>) slipmapstruct.toDto(slipEntityList);
+        return slipList;
     }
 
     @Override
